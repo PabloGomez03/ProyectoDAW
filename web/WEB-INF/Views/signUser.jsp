@@ -12,7 +12,7 @@
         <title>Formulario</title>
     </head>
     <body>
-        <h1>Web App</h1>
+        <h1>DresStyle</h1>
         <h3>Añadir Usuario</h3>
 
         <form action="/daw/signup" method="POST">
@@ -22,7 +22,8 @@
         <input id="email" type="text" name="email"><br />
         <label for="phone">Teléfono: </label>
         <input id="phone" type="text" name="phone"><br />
-
-        <input type="submit" value="Guardar" />
+        <label for="password">Contraseña </label>
+        <input id="password" type="text" name="password"><br />
+        <input type="submit" value="Guardar" href ="/signup/OK"/>
     </body>
 </html>
