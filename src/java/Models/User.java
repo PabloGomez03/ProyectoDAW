@@ -4,8 +4,9 @@
  */
 package Models;
 
-import jakarta.annotation.Nullable;
+
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -21,7 +23,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "users")
-public class Users implements Serializable {
+public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -32,14 +34,16 @@ public class Users implements Serializable {
     @JoinColumn(name = "cart_id")
     private ShoppingCart cart;
 
-    @Nullable
+    
     private String name;
+    @NotNull
+    @Column(unique = true)
     private String email;
     private String password;
     private String address;
     private String role;
 
-    public Users(ShoppingCart cart, String name, String email, String password, String address, String role) {
+    public User(ShoppingCart cart, String name, String email, String password, String address, String role) {
         this.cart = cart;
         this.name = name;
         this.email = email;
@@ -48,7 +52,7 @@ public class Users implements Serializable {
         this.role = role;
     }
 
-    public Users() {
+    public User() {
     }
 
     public ShoppingCart getCart() {
@@ -119,10 +123,10 @@ public class Users implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Users)) {
+        if (!(object instanceof User)) {
             return false;
         }
-        Users other = (Users) object;
+        User other = (User) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }

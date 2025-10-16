@@ -4,7 +4,6 @@
  */
 package Models;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -21,13 +21,13 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "orders")
-public class Orders implements Serializable {
+public class Order implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Nullable
+    @NotNull
     private Date orderDate;
     private float totalAmount;
     private String state;
@@ -35,10 +35,10 @@ public class Orders implements Serializable {
     @ManyToOne(fetch=FetchType.LAZY)
     private ShoppingCart cart;
 
-    public Orders() {
+    public Order() {
     }
 
-    public Orders(Date fechaPedido, float total, String estado) {
+    public Order(Date fechaPedido, float total, String estado) {
     
         this.orderDate = fechaPedido;
         this.totalAmount = total;
@@ -93,10 +93,10 @@ public class Orders implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Orders)) {
+        if (!(object instanceof Order)) {
             return false;
         }
-        Orders other = (Orders) object;
+        Order other = (Order) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }

@@ -4,7 +4,8 @@
  */
 package Models;
 
-import jakarta.annotation.Nullable;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +13,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.Constraint;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -26,16 +29,20 @@ public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Nullable
+    @NotNull
+    @Column(unique = true)
     private String name;
     private String description;
+    @NotNull
     private float price;
+    @NotNull
     private String size;
+    @NotNull
     private int stock;
     private String category;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    private Orders order;
+    private Order order;
     
 
     public Product() {

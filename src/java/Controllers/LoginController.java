@@ -5,7 +5,7 @@
 package Controllers;
 
 import Models.ShoppingCart;
-import Models.Users;
+import Models.User;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -61,6 +61,10 @@ public class LoginController extends HttpServlet {
         switch (action) {
 
             case "/login" -> {
+                
+                view = "login";
+                
+                
 
             }
             case "/signup" -> {
@@ -114,6 +118,11 @@ public class LoginController extends HttpServlet {
         switch (action) {
 
             case "/login" -> {
+                
+                email = request.getParameter("email");
+                password = request.getParameter("password");
+                
+                
 
             }
             case "/signup" -> {
@@ -127,7 +136,7 @@ public class LoginController extends HttpServlet {
                     
                     ShoppingCart cart = new ShoppingCart();
 
-                    Users user = new Users(cart, name, email, password, "", "");
+                    User user = new User(cart, name, email, password, "", "");
 
                     saveUser(user);
                     
@@ -136,6 +145,7 @@ public class LoginController extends HttpServlet {
                  
 
             }
+
 
         }
         
@@ -154,7 +164,7 @@ public class LoginController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
     
-    public void saveUser(Users u){
+    public void saveUser(User u){
         
         Long id = u.getId();
         try {
@@ -172,6 +182,33 @@ public class LoginController extends HttpServlet {
             throw new RuntimeException(e);
         }
     }
+    
+    /*public void logUser(User u){
+        
+        Long id;
+        
+        try {
+            utx.begin();
+            
+            em.contains(u);
+            
+            
+            utx.commit();
+            
+            utx.begin();
+            if (id == null) {
+                em.persist(u);
+                userLog.log(Level.INFO, "New User saved");
+            } else {
+                userLog.log(Level.INFO, "User {0} updated", id);
+                em.merge(u);
+            }
+            utx.commit();
+        } catch (Exception e) {
+            userLog.log(Level.SEVERE, "exception caught", e);
+            throw new RuntimeException(e);
+        }
+    }*/
         
         
     }

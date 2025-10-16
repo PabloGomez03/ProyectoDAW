@@ -13,5 +13,6 @@
     </head>
     <body>
         <h1>USUARIO REGISTRADO CORRECTAMENTE</h1>
+        <a href = "/daw">Home</a>
     </body>
 </html>
