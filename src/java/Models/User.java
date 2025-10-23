@@ -12,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -22,6 +23,7 @@ import java.io.Serializable;
  * @author apolo
  */
 @Entity
+@NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :qemail")
 @Table(name = "users")
 public class User implements Serializable {
 

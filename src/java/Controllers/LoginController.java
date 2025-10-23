@@ -9,6 +9,7 @@ import Models.User;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -16,31 +17,33 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.UserTransaction;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.Level;
-
 
 /**
  *
  * @author apolo
  */
-@WebServlet(name = "LoginController", urlPatterns = {"/login", "/login/*", "/signup","/signup/*"})
+
+@WebServlet(name = "LoginController", urlPatterns = {"/login", "/login/*", "/signup", "/signup/*"})
 public class LoginController extends HttpServlet {
 
     @PersistenceContext(unitName = "DAWFinalPU")
     private EntityManager em;
     @Resource
     private UserTransaction utx;
-    
+
     private static final Logger userLog = Logger.getLogger(LoginController.class.getName());
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        HttpSession session =request.getSession();
 
-        String view = "";
+        String view = "error";
         String action = "/login";
 
         if (request.getServletPath().equals("/login")) {
@@ -50,8 +53,14 @@ public class LoginController extends HttpServlet {
             }
 
         } else if (request.getServletPath().equals("/signup")) {
-
-            action = "/signup";
+            
+             action = "/signup";
+             
+            if (request.getPathInfo() != null) {
+                action = request.getPathInfo();
+            }
+            
+           
         } else {
 
             action = "error";
@@ -61,12 +70,11 @@ public class LoginController extends HttpServlet {
         switch (action) {
 
             case "/login" -> {
-                
+
                 view = "login";
-                
-                
 
             }
+   
             case "/signup" -> {
 
                 view = "signUser";
@@ -77,6 +85,8 @@ public class LoginController extends HttpServlet {
                 view = "error";
 
             }
+            
+            
 
         }
 
@@ -96,19 +106,27 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        HttpSession session =request.getSession();
 
         String view = "";
         String action = "/login";
 
-        String name, phone, email, password;
+        String name, email, password;
 
-        if (request.getServletPath().equals("/login") && request.getPathInfo() != null) {
+        if (request.getServletPath().equals("/login")) {
 
-            action = request.getPathInfo();
+            if(request.getPathInfo() != null){
+                
+                action = request.getPathInfo();
+            }
+            
 
         } else if (request.getServletPath().equals("/signup")) {
 
             action = "/signup";
+            
+            
         } else {
 
             action = "error";
@@ -118,38 +136,53 @@ public class LoginController extends HttpServlet {
         switch (action) {
 
             case "/login" -> {
-                
+
                 email = request.getParameter("email");
-                password = request.getParameter("password");
                 
+                User u = logUser(email);
                 
+                if(u != null){
+                    
+                    if(u.getName().equals("admin")){
+                        
+                    session.setAttribute("id", 1);
+                    session.setAttribute("role","admin");
+                        
+                    }
+                    else{
+                        
+                    session.setAttribute("id", 1);
+                    session.setAttribute("role","user");
+                        
+                    }
+                    
+                    view = "loginOK";
+                }
+                else{
+                    
+                    view = "error";
+                }
 
             }
             case "/signup" -> {
-                
-                    
-                    
-                    name = request.getParameter("name");
-                    phone = request.getParameter("phone");
-                    email = request.getParameter("email");
-                    password = request.getParameter("password");
-                    
-                    ShoppingCart cart = new ShoppingCart();
 
-                    User user = new User(cart, name, email, password, "", "");
+                name = request.getParameter("name");
+                email = request.getParameter("email");
+                password = request.getParameter("password");
 
-                    saveUser(user);
-                    
-                    view = "/signupOK";
+                ShoppingCart cart = new ShoppingCart();
 
-                 
+                User user = new User(cart, name, email, password, "", "");
+
+                saveUser(user);
+
+                view = "signupOK";
 
             }
 
-
         }
-        
-        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/Views/"+view+".jsp");
+
+        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/Views/" + view + ".jsp");
         rd.forward(request, response);
 
     }
@@ -163,9 +196,9 @@ public class LoginController extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-    
-    public void saveUser(User u){
-        
+
+    public void saveUser(User u) {
+
         Long id = u.getId();
         try {
             utx.begin();
@@ -182,34 +215,30 @@ public class LoginController extends HttpServlet {
             throw new RuntimeException(e);
         }
     }
-    
-    /*public void logUser(User u){
-        
-        Long id;
-        
+
+    public User logUser(String email) {
+
+        User u = null;
+
         try {
             utx.begin();
-            
-            em.contains(u);
-            
-            
+
+            Query q = em.createNamedQuery("User.findByEmail");
+            q.setParameter("qemail", email);
+
+            u = (User) q.getSingleResult();
+
             utx.commit();
-            
-            utx.begin();
-            if (id == null) {
-                em.persist(u);
-                userLog.log(Level.INFO, "New User saved");
-            } else {
-                userLog.log(Level.INFO, "User {0} updated", id);
-                em.merge(u);
-            }
-            utx.commit();
+
         } catch (Exception e) {
             userLog.log(Level.SEVERE, "exception caught", e);
             throw new RuntimeException(e);
+        } finally {
+
+            return u;
+
         }
-    }*/
-        
-        
+
     }
 
+}

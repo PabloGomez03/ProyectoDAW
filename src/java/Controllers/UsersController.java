@@ -6,6 +6,7 @@ package Controllers;
 
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.PersistenceContext;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -20,6 +21,7 @@ import jakarta.transaction.UserTransaction;
  *
  * @author apolo
  */
+
 @WebServlet(name = "UsersController", urlPatterns = {"/user", "/user/*"})
 public class UsersController extends HttpServlet {
 
@@ -28,6 +30,7 @@ public class UsersController extends HttpServlet {
     private EntityManager em;
     @Resource
     private UserTransaction utx;
+    
 
    
     @Override
