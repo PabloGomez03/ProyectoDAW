@@ -1,29 +1,50 @@
-<%-- 
-    Document   : formUser
-    Created on : 8 oct 2025, 13:13:16
-    Author     : apolo
---%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Formulario</title>
-    </head>
-    <body>
-        <h1>DresStyle</h1>
-        <h3>AÃ±adir Usuario</h3>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-        <form action="/daw/signup" method="POST">
-        <label for="name">Nombre:</label>
-        <input id="name" type="text" name="name"><br />
-        <label for="email">Correo:</label>
-        <input id="email" type="text" name="email"><br />
-        <label for="phone">TelÃ©fono: </label>
-        <input id="phone" type="text" name="phone"><br />
-        <label for="password">ContraseÃ±a </label>
-        <input id="password" type="text" name="password"><br />
-        <input type="submit" value="Guardar" href ="/signup/OK"/>
-    </body>
-</html>
+<c:set var="pageTitle" value="Registro - DressStyle" />
+<c:set var="activePage" value="signup" /> <%-- Esto marcará "Sign Up" como activo en el nav --%>
+
+<%-- 3. Incluye el header --%>
+<%@ include file="includes/header.jspf" %>
+
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        
+        <div class="card shadow-sm p-4">
+            <h2 class="text-center mb-4">Crear una Cuenta</h2>
+            
+            <form action="${pageContext.request.contextPath}/LoginController" method="POST">
+                
+                <div class="mb-3">
+                    <label for="name" class="form-label">Nombre Completo</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="address" class="form-label">Dirección</label>
+                    <input type="text" class="form-control" id="address" name="address" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary w-100">Crear Cuenta</button>
+
+                <div class="text-center mt-3">
+                    <p>¿Ya tienes cuenta? <a href="${pageContext.request.contextPath}/LoginController?action=login">Inicia sesión</a></p>
+                </div>
+            </form>
+        </div>
+        
+    </div>
+</div>
+
+<%@ include file="includes/footer.jspf" %>

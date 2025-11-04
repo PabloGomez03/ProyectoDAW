@@ -1,27 +1,40 @@
-<%-- 
-    Document   : login
-    Created on : 15 oct 2025, 11:26:55
-    Author     : apolo
---%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Login</title>
-    </head>
-    <body>
-        
-        <h1>DresStyle</h1>
-        <h3>Iniciar Sesion</h3>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-        <form action="/daw/login" method="POST">
-        <label for="email">Correo:</label>
-        <input id="email" type="text" name="email"><br />
-        <label for="password">ContraseÃ±a </label>
-        <input id="password" type="text" name="password"><br />
-        <input type="submit" value="Guardar" href ="/login/OK"/>
+<c:set var="pageTitle" value="Iniciar Sesión - DressStyle" />
+<c:set var="activePage" value="login" /> <%-- Esto marcará "Login" como activo en el nav --%>
+
+
+<%@ include file="includes/header.jspf" %>
+
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
         
-    </body>
-</html>
+        <div class="card shadow-sm p-4">
+            <h2 class="text-center mb-4">Iniciar Sesión</h2>
+            
+            <form action="/daw/login" method="POST">
+                
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary w-100">Entrar</button>
+
+                <div class="text-center mt-3">
+                    <p>¿No tienes cuenta? <a href="/daw/signup">Regístrate aquí</a></p>
+                </div>
+            </form>
+        </div>
+        
+    </div>
+</div>
+
+<%@ include file="includes/footer.jspf" %>

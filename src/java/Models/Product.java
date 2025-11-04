@@ -39,6 +39,7 @@ public class Product implements Serializable {
     @NotNull
     private int stock;
     private String category;
+    private String pathImage;
     
     @ManyToOne(fetch = FetchType.LAZY)
     private Order order;
@@ -47,13 +48,14 @@ public class Product implements Serializable {
     public Product() {
     }
 
-    public Product(String nombre, String descripcion, float precio, String talla, int stock, String categoria) {
+    public Product(String nombre, String descripcion, float precio, String talla, int stock, String categoria,String pathImage) {
         this.name = nombre;
         this.description = descripcion;
         this.price = precio;
         this.size = talla;
         this.stock = stock;
         this.category = categoria;
+        this.pathImage = pathImage;
     }
 
     public String getName() {
@@ -103,8 +105,22 @@ public class Product implements Serializable {
     public void setCategory(String category) {
         this.category = category;
     }
-  
 
+    public String getPathImage() {
+        return pathImage;
+    }
+
+    public void setPathImage(String pathImage) {
+        this.pathImage = pathImage;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
     
 
     public Long getId() {
