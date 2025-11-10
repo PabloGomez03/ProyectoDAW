@@ -27,7 +27,7 @@ import java.util.logging.Level;
  * @author apolo
  */
 
-@WebServlet(name = "LoginController", urlPatterns = {"/login", "/login/*", "/signup", "/signup/*"})
+@WebServlet(name = "LoginController", urlPatterns = {"/login", "/login/*", "/signup", "/signup/*","/logout",""})
 public class LoginController extends HttpServlet {
 
     @PersistenceContext(unitName = "DAWFinalPU")
@@ -43,7 +43,7 @@ public class LoginController extends HttpServlet {
         
         HttpSession session =request.getSession();
 
-        String view = "error";
+        String view = "";
         String action = "/login";
 
         if (request.getServletPath().equals("/login")) {
@@ -61,7 +61,13 @@ public class LoginController extends HttpServlet {
             }
             
            
-        } else {
+        } 
+        else if(request.getServletPath().isEmpty()){
+            
+            action = "";
+            
+        }
+        else {
 
             action = "error";
 
@@ -80,10 +86,17 @@ public class LoginController extends HttpServlet {
                 view = "signUser";
 
             }
+            
+            
             case "/error" -> {
 
                 view = "error";
 
+            }
+            case ""->{
+                
+                view = "index";
+                
             }
             
             
@@ -112,7 +125,7 @@ public class LoginController extends HttpServlet {
         String view = "";
         String action = "/login";
 
-        String name, email, password;
+        String name, email, password,address;
 
         if (request.getServletPath().equals("/login")) {
 
@@ -127,7 +140,13 @@ public class LoginController extends HttpServlet {
             action = "/signup";
             
             
-        } else {
+        } 
+        else if(request.getServletPath().equals("/logout")){
+            
+             action = "/logout";
+            
+        }
+        else {
 
             action = "error";
 
@@ -146,12 +165,12 @@ public class LoginController extends HttpServlet {
                     if(u.getName().equals("admin")){
                         
                     session.setAttribute("id", 1);
-                    session.setAttribute("role","admin");
+                    session.setAttribute("role","admin-user");
                         
                     }
                     else{
                         
-                    session.setAttribute("id", 1);
+                    session.setAttribute("id", 2);
                     session.setAttribute("role","user");
                         
                     }
@@ -169,15 +188,25 @@ public class LoginController extends HttpServlet {
                 name = request.getParameter("name");
                 email = request.getParameter("email");
                 password = request.getParameter("password");
+                address = request.getParameter("address");
 
                 ShoppingCart cart = new ShoppingCart();
 
-                User user = new User(cart, name, email, password, "", "");
+                User user = new User(cart, name, email, password, address, "user");
 
                 saveUser(user);
 
                 view = "signupOK";
 
+            }
+            
+            case "/logout" ->{
+                
+                session.removeAttribute("id");
+                session.removeAttribute("role");
+                
+                view = "index";
+                
             }
 
         }

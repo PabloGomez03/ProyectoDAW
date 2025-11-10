@@ -1,9 +1,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<c:set var="pageTitle" value="Iniciar Sesión - DressStyle" />
-<c:set var="activePage" value="login" /> <%-- Esto marcará "Login" como activo en el nav --%>
-
+<c:set var="pageTitle" value="Iniciar Sesión" />
 
 <%@ include file="includes/header.jspf" %>
 

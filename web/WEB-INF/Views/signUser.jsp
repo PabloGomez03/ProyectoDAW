@@ -1,10 +1,9 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<c:set var="pageTitle" value="Registro - DressStyle" />
-<c:set var="activePage" value="signup" /> <%-- Esto marcará "Sign Up" como activo en el nav --%>
+<c:set var="pageTitle" value="Registro" />
 
-<%-- 3. Incluye el header --%>
+
 <%@ include file="includes/header.jspf" %>
 
 
@@ -14,7 +13,7 @@
         <div class="card shadow-sm p-4">
             <h2 class="text-center mb-4">Crear una Cuenta</h2>
             
-            <form action="${pageContext.request.contextPath}/LoginController" method="POST">
+            <form action="/daw/signup" method="POST">
                 
                 <div class="mb-3">
                     <label for="name" class="form-label">Nombre Completo</label>
@@ -39,7 +38,7 @@
                 <button type="submit" class="btn btn-primary w-100">Crear Cuenta</button>
 
                 <div class="text-center mt-3">
-                    <p>¿Ya tienes cuenta? <a href="${pageContext.request.contextPath}/LoginController?action=login">Inicia sesión</a></p>
+                    <p>¿Ya tienes cuenta? <a href="/daw/login">Inicia sesión</a></p>
                 </div>
             </form>
         </div>
