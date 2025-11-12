@@ -4,12 +4,14 @@
  */
 package Controllers;
 
+import Models.Product;
 import Models.ShoppingCart;
 import Models.User;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -18,7 +20,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.HeuristicMixedException;
+import jakarta.transaction.HeuristicRollbackException;
+import jakarta.transaction.NotSupportedException;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
@@ -26,8 +35,7 @@ import java.util.logging.Level;
  *
  * @author apolo
  */
-
-@WebServlet(name = "LoginController", urlPatterns = {"/login", "/login/*", "/signup", "/signup/*","/logout",""})
+@WebServlet(name = "LoginController", urlPatterns = {"/login", "/login/*", "/signup", "/signup/*", "/logout", ""})
 public class LoginController extends HttpServlet {
 
     @PersistenceContext(unitName = "DAWFinalPU")
@@ -40,8 +48,8 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        HttpSession session =request.getSession();
+
+        HttpSession session = request.getSession();
 
         String view = "";
         String action = "/login";
@@ -53,21 +61,21 @@ public class LoginController extends HttpServlet {
             }
 
         } else if (request.getServletPath().equals("/signup")) {
-            
-             action = "/signup";
-             
+
+            action = "/signup";
+
             if (request.getPathInfo() != null) {
                 action = request.getPathInfo();
             }
-            
-           
-        } 
-        else if(request.getServletPath().isEmpty()){
-            
+
+        } else if (request.getServletPath().isEmpty()) {
+
             action = "";
-            
-        }
-        else {
+
+        } else if (request.getServletPath().equals("/logout")) {
+
+            action = "/logout";
+        } else {
 
             action = "error";
 
@@ -80,26 +88,47 @@ public class LoginController extends HttpServlet {
                 view = "login";
 
             }
-   
+
             case "/signup" -> {
 
                 view = "signUser";
 
             }
-            
-            
+
+            case "/logout" -> {
+
+                session.removeAttribute("id");
+                session.removeAttribute("role");
+                session.removeAttribute("name");
+
+                view = "index";
+
+            }
+
             case "/error" -> {
 
                 view = "error";
 
             }
-            case ""->{
-                
-                view = "index";
-                
+            case "" -> {
+
+                try {
+                    utx.begin();
+
+                    List<Product> list = null;
+
+                    TypedQuery<Product> query = em.createQuery("SELECT p FROM Product p WHERE p.order = NULL", Product.class);
+                    list = query.getResultList();
+
+                    request.setAttribute("list", list);
+
+                    view = "index";
+                    utx.commit();
+                } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+                    Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
             }
-            
-            
 
         }
 
@@ -108,45 +137,29 @@ public class LoginController extends HttpServlet {
 
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        HttpSession session =request.getSession();
+
+        HttpSession session = request.getSession();
 
         String view = "";
         String action = "/login";
 
-        String name, email, password,address;
+        String name, email, password, address;
 
         if (request.getServletPath().equals("/login")) {
 
-            if(request.getPathInfo() != null){
-                
+            if (request.getPathInfo() != null) {
+
                 action = request.getPathInfo();
             }
-            
 
         } else if (request.getServletPath().equals("/signup")) {
 
             action = "/signup";
-            
-            
-        } 
-        else if(request.getServletPath().equals("/logout")){
-            
-             action = "/logout";
-            
-        }
-        else {
+
+        } else {
 
             action = "error";
 
@@ -157,28 +170,28 @@ public class LoginController extends HttpServlet {
             case "/login" -> {
 
                 email = request.getParameter("email");
-                
+
                 User u = logUser(email);
-                
-                if(u != null){
-                    
-                    if(u.getName().equals("admin")){
-                        
-                    session.setAttribute("id", 1);
-                    session.setAttribute("role","admin-user");
-                        
+
+                if (u != null) {
+
+                    if (u.getName().equals("admin")) {
+
+                        session.setAttribute("id", 1);
+                        session.setAttribute("name", u.getName());
+                        session.setAttribute("role", "admin-user");
+
+                    } else {
+
+                        session.setAttribute("id", 2);
+                        session.setAttribute("name", u.getName());
+                        session.setAttribute("role", "user");
+
                     }
-                    else{
-                        
-                    session.setAttribute("id", 2);
-                    session.setAttribute("role","user");
-                        
-                    }
-                    
+
                     view = "loginOK";
-                }
-                else{
-                    
+                } else {
+
                     view = "error";
                 }
 
@@ -198,15 +211,6 @@ public class LoginController extends HttpServlet {
 
                 view = "signupOK";
 
-            }
-            
-            case "/logout" ->{
-                
-                session.removeAttribute("id");
-                session.removeAttribute("role");
-                
-                view = "index";
-                
             }
 
         }
@@ -239,7 +243,7 @@ public class LoginController extends HttpServlet {
                 em.merge(u);
             }
             utx.commit();
-        } catch (Exception e) {
+        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException e) {
             userLog.log(Level.SEVERE, "exception caught", e);
             throw new RuntimeException(e);
         }
@@ -259,7 +263,7 @@ public class LoginController extends HttpServlet {
 
             utx.commit();
 
-        } catch (Exception e) {
+        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException e) {
             userLog.log(Level.SEVERE, "exception caught", e);
             throw new RuntimeException(e);
         } finally {
