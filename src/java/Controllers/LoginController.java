@@ -26,7 +26,6 @@ import jakarta.transaction.NotSupportedException;
 import jakarta.transaction.RollbackException;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -102,6 +101,7 @@ public class LoginController extends HttpServlet {
                 session.removeAttribute("name");
 
                 view = "index";
+                loadIndex(request);
 
             }
 
@@ -111,22 +111,9 @@ public class LoginController extends HttpServlet {
 
             }
             case "" -> {
-
-                try {
-                    utx.begin();
-
-                    List<Product> list = null;
-
-                    TypedQuery<Product> query = em.createQuery("SELECT p FROM Product p WHERE p.order = NULL", Product.class);
-                    list = query.getResultList();
-
-                    request.setAttribute("list", list);
-
-                    view = "index";
-                    utx.commit();
-                } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
-                    Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                
+                view = "index";
+                loadIndex(request);
 
             }
 
@@ -272,6 +259,25 @@ public class LoginController extends HttpServlet {
 
         }
 
+    }
+    public void loadIndex(HttpServletRequest request){
+        
+        try {
+                    utx.begin();
+
+                    List<Product> list = null;
+
+                    TypedQuery<Product> query = em.createQuery("SELECT p FROM Product p", Product.class);
+                    list = query.getResultList();
+
+                    request.setAttribute("list", list);
+
+                    utx.commit();
+                } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+                    Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+        
+        
     }
 
 }

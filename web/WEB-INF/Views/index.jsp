@@ -1,11 +1,13 @@
-
+<%-- 
+  Página: index.jsp (La Vista)
+  Ahora es dinámica y lee la variable "listaDeProductos"
+--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-
-<c:set var="pageTitle" value="DressStyle - El estilo es nuestra pasión" />
+<c:set var="pageTitle" value="DressStyle - Inicio" />
+<c:set var="activePage" value="home" />
 
 <%@ include file="includes/header.jspf" %>
-
 
 
 <div class="row">
@@ -17,60 +19,25 @@
     </div>
 </div>
 
-
 <h2 class="my-4">Productos Destacados</h2>
-        
 <div class="row">
     
+    <c:forEach var="prod" items="${requestScope.list}">
     
-    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-        <div class="card h-100">
-            <img src="img/camisaindex.jpg" class="card-img-top" alt="Producto 1">
-            <div class="card-body">
-                <h5 class="card-title">Camisa Elegante</h5>
-                <p class="card-text">29.99</p>
-                <a href="#" class="btn btn-primary">Ver producto</a>
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100">
+                
+                <img src="${prod.pathImage}" class="card-img-top" alt="${prod.name}">
+                
+                <div class="card-body">
+                    <h5 class="card-title">${prod.name}</h5>
+                    <p class="card-text">${prod.price}</p>
+                    <a href="#" class="btn btn-primary">Ver producto</a>
+                </div>
             </div>
         </div>
-    </div>
-
-    
-    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-        <div class="card h-100">
-            <img src="img/pantalonesindex.jpg" class="card-img-top" alt="Producto 2">
-            <div class="card-body">
-                <h5 class="card-title">Vaqueros Slim Fit</h5>
-                <p class="card-text">45.50</p>
-                <a href="#" class="btn btn-primary">Ver producto</a>
-            </div>
-        </div>
-    </div>
-
-   
-    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-        <div class="card h-100">
-            <img src="img/zapatosindex.jpg" class="card-img-top" alt="Producto 3">
-            <div class="card-body">
-                <h5 class="card-title">Zapatillas Urbanas</h5>
-                <p class="card-text">79.90</p>
-                <a href="#" class="btn btn-primary">Ver producto</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Producto 4 (Tarjeta) -->
-    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-        <div class="card h-100">
-            <img src="img/bolsoindex.png" class="card-img-top" alt="Producto 4">
-            <div class="card-body">
-                <h5 class="card-title">Bolso de Cuero</h5>
-                <p class="card-text">120.00?</p>
-                <a href="#" class="btn btn-primary">Ver producto</a>
-            </div>
-        </div>
-    </div>
+        
+    </c:forEach> <%-- Fin del bucle --%>
     
 </div>
-
-
 <%@ include file="includes/footer.jspf" %>
