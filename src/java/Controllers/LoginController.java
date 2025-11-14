@@ -96,10 +96,7 @@ public class LoginController extends HttpServlet {
 
             case "/logout" -> {
 
-                session.removeAttribute("id");
-                session.removeAttribute("role");
-                session.removeAttribute("name");
-
+               session.removeAttribute("user");
                 view = "index";
                 loadIndex(request);
 
@@ -161,22 +158,10 @@ public class LoginController extends HttpServlet {
                 User u = logUser(email);
 
                 if (u != null) {
-
-                    if (u.getName().equals("admin")) {
-
-                        session.setAttribute("id", 1);
-                        session.setAttribute("name", u.getName());
-                        session.setAttribute("role", "admin-user");
-
-                    } else {
-
-                        session.setAttribute("id", 2);
-                        session.setAttribute("name", u.getName());
-                        session.setAttribute("role", "user");
-
-                    }
-
+                    
+                    session.setAttribute("user", u);
                     view = "loginOK";
+                    
                 } else {
 
                     view = "error";
@@ -207,11 +192,7 @@ public class LoginController extends HttpServlet {
 
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
+    
     @Override
     public String getServletInfo() {
         return "Short description";

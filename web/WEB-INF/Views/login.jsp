@@ -12,7 +12,7 @@
         <div class="card shadow-sm p-4">
             <h2 class="text-center mb-4">Iniciar Sesión</h2>
             
-            <form action="/daw/login" method="POST">
+            <form action="${pageContext.request.contextPath}/login" method="POST">
                 
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
@@ -27,7 +27,7 @@
                 <button type="submit" class="btn btn-primary w-100">Entrar</button>
 
                 <div class="text-center mt-3">
-                    <p>¿No tienes cuenta? <a href="/daw/signup">Regístrate aquí</a></p>
+                    <p>¿No tienes cuenta? <a href="${pageContext.request.contextPath}/signup">Regístrate aquí</a></p>
                 </div>
             </form>
         </div>

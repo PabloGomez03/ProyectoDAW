@@ -37,7 +37,7 @@
             </div>
         </div>
         
-    </c:forEach> <%-- Fin del bucle --%>
+    </c:forEach> 
     
 </div>
 <%@ include file="includes/footer.jspf" %>

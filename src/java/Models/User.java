@@ -24,6 +24,7 @@ import java.io.Serializable;
  */
 @Entity
 @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :qemail")
+@NamedQuery(name = "User.findById", query = "SELECT u FROM User u WHERE u.id = :qid")
 @Table(name = "users")
 public class User implements Serializable {
 

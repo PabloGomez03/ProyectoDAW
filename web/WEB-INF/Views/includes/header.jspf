@@ -11,7 +11,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-        <!-- <link rel="stylesheet" href="/css/style.css">-->
+        
     </head>
     <body class="bg-light">
 
@@ -34,7 +34,7 @@
                         <c:choose>
 
 
-                            <c:when test="${empty sessionScope.id}">
+                            <c:when test="${empty sessionScope.user.id}">
                                 <li class="nav-item">
                                     <a class="nav-link" 
                                        href="/daw/signup">
@@ -49,16 +49,34 @@
                                 </li>
                             </c:when>
 
-                            <%-- CÓDIGO CORRECTO --%>
+                            
                             <c:otherwise>
 
+                                <c:choose>
 
-                                <li class="nav-item">
-                                    <a class="nav-link"> 
-                                        <i class="bi bi-person-fill"></i>
-                                        Hola, ${sessionScope.name}
-                                    </a>
-                                </li>
+                                    <c:when test="${sessionScope.user.role == 'admin-user'}">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href = "${pageContext.request.contextPath}/admin"> 
+                                                <i class="bi bi-gear-fill"></i>
+                                                Gestión
+                                            </a>
+                                        </li>
+                                    </c:when>
+
+
+                                    <c:otherwise>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href = "${pageContext.request.contextPath}/profile/${sessionScope.user.id}"> 
+                                                <i class="bi bi-person-fill"></i>
+                                                Hola, ${sessionScope.user.name}
+                                            </a>
+                                        </li>
+                                    </c:otherwise>
+
+
+                                </c:choose>
+
+
 
 
                                 <li class="nav-item">
