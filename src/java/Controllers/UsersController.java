@@ -8,7 +8,6 @@ import Models.User;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -60,7 +59,7 @@ public class UsersController extends HttpServlet {
         }
         else {
 
-            action = "error";
+            action = "/error";
 
         }
         
@@ -69,7 +68,7 @@ public class UsersController extends HttpServlet {
             case "/admin" ->{
                 
                 User s = (User) session.getAttribute("user");
-                if(s.getRole().contains("admin")){
+                if(s.getRole().equals("admin-user")){
                     
                     view = "administration";
                     
