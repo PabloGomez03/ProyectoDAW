@@ -34,8 +34,8 @@ public class Product implements Serializable {
     private String description;
     @NotNull
     private float price;
-    @NotNull
-    private String size;
+    /*@NotNull
+    private String size;*/
     @NotNull
     private int stock;
     private String category;
@@ -48,11 +48,10 @@ public class Product implements Serializable {
     public Product() {
     }
 
-    public Product(String nombre, String descripcion, float precio, String talla, int stock, String categoria,String pathImage) {
+    public Product(String nombre, String descripcion, float precio, int stock, String categoria,String pathImage) {
         this.name = nombre;
         this.description = descripcion;
         this.price = precio;
-        this.size = talla;
         this.stock = stock;
         this.category = categoria;
         this.pathImage = pathImage;
@@ -82,13 +81,6 @@ public class Product implements Serializable {
         this.price = price;
     }
 
-    public String getSize() {
-        return size;
-    }
-
-    public void setSize(String size) {
-        this.size = size;
-    }
 
     public int getStock() {
         return stock;

@@ -7,6 +7,8 @@
 </c:if>
 
 <c:set var="pageTitle" value="Gestión - Admin" />
+<c:set var="users" value="${requestScope.ulist}" />
+<c:set var="products" value="${requestScope.plist}" />
 
 <%@ include file="includes/header.jspf" %>
 
@@ -24,7 +26,7 @@
             <div class="card-body d-flex justify-content-between align-items-center">
                 <div>
                     <h5 class="card-title">Productos</h5>
-                    <h2 class="mb-0">${adminProductList.size()}</h2>
+                    <h2 class="mb-0">${products.size()}</h2>
                 </div>
                 <i class="bi bi-tags-fill" style="font-size: 3rem; opacity: 0.5;"></i>
             </div>
@@ -35,7 +37,7 @@
             <div class="card-body d-flex justify-content-between align-items-center">
                 <div>
                     <h5 class="card-title">Usuarios Registrados</h5>
-                    <h2 class="mb-0">${adminUserList.size()}</h2>
+                    <h2 class="mb-0">${users.size()}</h2>
                 </div>
                 <i class="bi bi-people-fill" style="font-size: 3rem; opacity: 0.5;"></i>
             </div>
@@ -83,7 +85,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <c:forEach var="p" items="${adminProductList}">
+                            <c:forEach var="p" items="${products}">
                                 <tr>
                                     <td>
                                         <img src="${pageContext.request.contextPath}/${p.pathImage}" 
@@ -128,7 +130,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <c:forEach var="u" items="${adminUserList}">
+                            <c:forEach var="u" items="${users}">
                                 <tr>
                                     <td>#${u.id}</td>
                                     <td>${u.name}</td>
@@ -143,10 +145,7 @@
                                         </c:if>
                                     </td>
                                     <td class="text-end">
-                                        <a href="${pageContext.request.contextPath}/profile/${u.id}" class="btn btn-outline-secondary btn-sm">
-                                            <i class="bi bi-eye"></i> Ver
-                                        </a>
-                                        <a href="#" class="btn btn-outline-danger btn-sm">
+                                        <a href="#" class="btn btn-outline-danger btn-sm" title="Eliminar Usuario">
                                             <i class="bi bi-trash"></i>
                                         </a>
                                     </td>

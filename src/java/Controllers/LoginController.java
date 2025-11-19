@@ -96,7 +96,7 @@ public class LoginController extends HttpServlet {
 
             case "/logout" -> {
 
-               session.removeAttribute("user");
+                session.removeAttribute("user");
                 view = "index";
                 loadIndex(request);
 

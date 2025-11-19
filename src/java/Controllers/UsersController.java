@@ -4,10 +4,12 @@
  */
 package Controllers;
 
+import Models.Product;
 import Models.User;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -22,6 +24,7 @@ import jakarta.transaction.NotSupportedException;
 import jakarta.transaction.RollbackException;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,7 +32,7 @@ import java.util.logging.Logger;
  *
  * @author apolo
  */
-@WebServlet(name = "UsersController", urlPatterns = {"/profile/*","/modify", "/admin"})
+@WebServlet(name = "UsersController", urlPatterns = {"/profile/*", "/modify", "/admin"})
 public class UsersController extends HttpServlet {
 
     @PersistenceContext(unitName = "DAWFinalPU")
@@ -56,50 +59,44 @@ public class UsersController extends HttpServlet {
 
             action = "/admin";
 
-        }
-        else {
+        } else {
 
             action = "/error";
 
         }
-        
-        switch(action){
-            
-            case "/admin" ->{
-                
+
+        switch (action) {
+
+            case "/admin" -> {
+
                 User s = (User) session.getAttribute("user");
-                if(s.getRole().equals("admin-user")){
-                    
+                if (s.getRole().equals("admin-user")) {
+
+                    loadData(request);
                     view = "administration";
-                    
-                }
-                else{
-                    
+
+                } else {
+
                     view = "error";
-                    
+
                 }
-                
-                
-                
-                
+
             }
-            
-            case "error" ->{
-                
+
+            case "error" -> {
+
                 view = "error";
-                
-                
+
             }
-            
-            default ->{
-                
+
+            default -> {
+
                 view = "profile";
-                
+
             }
-            
-            
+
         }
-        
+
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/Views/" + view + ".jsp");
         rd.forward(request, response);
 
@@ -110,7 +107,7 @@ public class UsersController extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-        
+
         String view = "";
         String action = "/login";
 
@@ -118,38 +115,29 @@ public class UsersController extends HttpServlet {
 
             action = "/modify";
 
-        }  else {
+        } else {
 
             action = "/error";
 
         }
-        
-        switch(action){
-            
-            
-            case "/error" ->{
-                
+
+        switch (action) {
+
+            case "/error" -> {
+
                 view = "error";
-                
-                
+
             }
-            
-            
-            case "/modify" ->{
-                
+
+            case "/modify" -> {
+
                 modifyUser(request, session);
                 view = "modifyOK";
-                
-                
+
             }
-                   
-        
-        
-        
-        
-        
+
         }
-        
+
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/Views/" + view + ".jsp");
         rd.forward(request, response);
 
@@ -160,25 +148,47 @@ public class UsersController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    
-    public void modifyUser(HttpServletRequest request,HttpSession session){
-        
+    public void modifyUser(HttpServletRequest request, HttpSession session) {
+
         try {
             utx.begin();
-            User u = (User)session.getAttribute("user");
-            
+            User u = (User) session.getAttribute("user");
+
             u.setName(request.getParameter("name"));
             u.setEmail(request.getParameter("email"));
             u.setAddress(request.getParameter("address"));
             u.setPassword(request.getParameter("password"));
-            
+
             em.merge(u);
-       
+
             utx.commit();
         } catch (RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException | SystemException | NotSupportedException ex) {
             Logger.getLogger(UsersController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
+
+    }
+
+    public void loadData(HttpServletRequest resquest) {
+
+        try {
+            utx.begin();
+
+            List<Product> ProductList = null;
+            List<User> UserList = null;
+
+            TypedQuery<Product> pquery = em.createQuery("SELECT p FROM Product p", Product.class);
+            ProductList = pquery.getResultList();
+
+            TypedQuery<User> uquery = em.createQuery("SELECT u FROM User u", User.class);
+            UserList = uquery.getResultList();
+
+            resquest.setAttribute("plist", ProductList);
+            resquest.setAttribute("ulist", UserList);
+
+            utx.commit();
+        } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 }
