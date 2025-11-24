@@ -32,7 +32,7 @@ import java.util.logging.Logger;
  *
  * @author apolo
  */
-@WebServlet(name = "UsersController", urlPatterns = {"/profile/*", "/modify", "/admin"})
+@WebServlet(name = "UsersController", urlPatterns = {"/profile/*", "/modify", "/admin","/remove/*"})
 public class UsersController extends HttpServlet {
 
     @PersistenceContext(unitName = "DAWFinalPU")
@@ -115,10 +115,15 @@ public class UsersController extends HttpServlet {
 
             action = "/modify";
 
-        } else {
+        } else if(request.getServletPath().contains("/remove")){
 
+            action = "/remove";
+
+        }
+        else{
+            
             action = "/error";
-
+            
         }
 
         switch (action) {
@@ -135,6 +140,16 @@ public class UsersController extends HttpServlet {
                 view = "modifyOK";
 
             }
+            
+            case "/remove" ->{
+                
+                Long id = Long.valueOf(request.getPathInfo());
+                deleteUser(id);
+                view = "administration";
+                
+                
+            }
+            
 
         }
 
@@ -190,5 +205,21 @@ public class UsersController extends HttpServlet {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+    
+    public void deleteUser(Long id){
+        
+        try {
+            utx.begin();
+
+            em.remove(em.find(User.class, id));
+            
+
+            utx.commit();
+        } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
     }
 }

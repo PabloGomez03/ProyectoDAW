@@ -34,7 +34,7 @@ import java.util.logging.Level;
  *
  * @author apolo
  */
-@WebServlet(name = "LoginController", urlPatterns = {"/login", "/login/*", "/signup", "/signup/*", "/logout", ""})
+@WebServlet(name = "LoginController", urlPatterns = {"/login", "/signup", "/logout", ""})
 public class LoginController extends HttpServlet {
 
     @PersistenceContext(unitName = "DAWFinalPU")
@@ -97,6 +97,8 @@ public class LoginController extends HttpServlet {
             case "/logout" -> {
 
                 session.removeAttribute("user");
+                session.removeAttribute("login");
+                session.removeAttribute("sign");
                 view = "index";
                 loadIndex(request);
 
@@ -154,8 +156,10 @@ public class LoginController extends HttpServlet {
             case "/login" -> {
 
                 email = request.getParameter("email");
+                password = request.getParameter("password");
+                        
 
-                User u = logUser(email);
+                User u = logUser(email,password);
 
                 if (u != null) {
                     
@@ -164,7 +168,8 @@ public class LoginController extends HttpServlet {
                     
                 } else {
 
-                    view = "error";
+                    request.setAttribute("login", "Los datos introducidos no son correctos!");
+                    view = "login";
                 }
 
             }
@@ -179,10 +184,26 @@ public class LoginController extends HttpServlet {
 
                 User user = new User(cart, name, email, password, address, "user");
 
-                saveUser(user);
+                if(saveUser(user)){
+                    
+                    view = "signupOK";
+                    
+                    
+                }
+                else{
+                    
+                    request.setAttribute("sign", "Ya existe un usuario con ese email registrado!!");
+                    view = "signup";
+                    
+                }
 
-                view = "signupOK";
+                
 
+            }
+            case "/error" ->{
+                
+                view = "error";
+                
             }
 
         }
@@ -192,32 +213,37 @@ public class LoginController extends HttpServlet {
 
     }
 
-    
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
 
-    public void saveUser(User u) {
+    public boolean saveUser(User u) {
 
-        Long id = u.getId();
+        boolean cond = false;
+        
         try {
             utx.begin();
-            if (id == null) {
+            
+            User user = em.find(User.class, u.getId());
+            
+            if(user == null){
+                
                 em.persist(u);
                 userLog.log(Level.INFO, "New User saved");
-            } else {
-                userLog.log(Level.INFO, "User {0} updated", id);
-                em.merge(u);
+                cond = true;
+                
             }
+            
             utx.commit();
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException e) {
             userLog.log(Level.SEVERE, "exception caught", e);
             throw new RuntimeException(e);
         }
+        finally{
+            
+            return cond;
+            
+        }
     }
 
-    public User logUser(String email) {
+    public User logUser(String email,String password) {
 
         User u = null;
 
@@ -228,6 +254,12 @@ public class LoginController extends HttpServlet {
             q.setParameter("qemail", email);
 
             u = (User) q.getSingleResult();
+            
+            if(!u.getPassword().equals(password)){
+                
+                u = null;
+                
+            }
 
             utx.commit();
 

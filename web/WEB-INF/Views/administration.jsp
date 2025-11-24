@@ -101,9 +101,6 @@
                                         </c:choose>
                                     </td>
                                     <td class="text-end">
-                                        <a href="#" class="btn btn-outline-primary btn-sm" title="Editar">
-                                            <i class="bi bi-pencil-square"></i>
-                                        </a>
                                         <a href="#" class="btn btn-outline-danger btn-sm" title="Eliminar">
                                             <i class="bi bi-trash"></i>
                                         </a>
@@ -145,7 +142,7 @@
                                         </c:if>
                                     </td>
                                     <td class="text-end">
-                                        <a href="#" class="btn btn-outline-danger btn-sm" title="Eliminar Usuario">
+                                        <a href="${pageContext.request.contextPath}/remove/${u.id}" class="btn btn-outline-danger btn-sm" title="Eliminar Usuario">
                                             <i class="bi bi-trash"></i>
                                         </a>
                                     </td>

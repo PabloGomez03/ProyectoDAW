@@ -8,22 +8,30 @@
 
 <div class="row">
     <div class="col-md-6 offset-md-3">
-        
+
         <div class="card shadow-sm p-4">
             <h2 class="text-center mb-4">Iniciar Sesión</h2>
-            
+
+            <c:if test="${not empty requestScope.login}">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill"></i> 
+                    <c:out value="${requestScope.login}"/>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </c:if>
+
             <form action="${pageContext.request.contextPath}/login" method="POST">
                 
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
                     <input type="email" class="form-control" id="email" name="email" required>
                 </div>
-                
+
                 <div class="mb-3">
                     <label for="password" class="form-label">Contraseña</label>
                     <input type="password" class="form-control" id="password" name="password" required>
                 </div>
-                
+
                 <button type="submit" class="btn btn-primary w-100">Entrar</button>
 
                 <div class="text-center mt-3">
@@ -31,7 +39,7 @@
                 </div>
             </form>
         </div>
-        
+
     </div>
 </div>
 

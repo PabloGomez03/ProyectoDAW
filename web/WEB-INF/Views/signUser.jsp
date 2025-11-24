@@ -13,6 +13,14 @@
         <div class="card shadow-sm p-4">
             <h2 class="text-center mb-4">Crear una Cuenta</h2>
             
+            <c:if test="${not empty requestScope.login}">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill"></i> 
+                    <c:out value="${requestScope.login}"/>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </c:if>
+            
             <form action="${pageContext.request.contextPath}/signup" method="POST">
                 
                 <div class="mb-3">
