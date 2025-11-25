@@ -67,7 +67,7 @@
             <div class="tab-pane fade show active" id="products" role="tabpanel">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4>Inventario</h4>
-                    <a href="#" class="btn btn-primary btn-sm">
+                    <a href="${pageContext.request.contextPath}/products/new" class="btn btn-primary btn-sm">
                         <i class="bi bi-plus-circle"></i> Nuevo Producto
                     </a>
                 </div>
@@ -101,7 +101,7 @@
                                         </c:choose>
                                     </td>
                                     <td class="text-end">
-                                        <a href="#" class="btn btn-outline-danger btn-sm" title="Eliminar">
+                                        <a href="${pageContext.request.contextPath}/products/delete/${p.id}" class="btn btn-outline-danger btn-sm" title="Eliminar">
                                             <i class="bi bi-trash"></i>
                                         </a>
                                     </td>

@@ -59,6 +59,10 @@ public class UsersController extends HttpServlet {
 
             action = "/admin";
 
+        }else if(request.getServletPath().contains("/remove")){
+
+            action = "/remove";
+
         } else {
 
             action = "/error";
@@ -88,6 +92,15 @@ public class UsersController extends HttpServlet {
                 view = "error";
 
             }
+            case "/remove" ->{
+                
+                Long id = Long.valueOf(request.getPathInfo().substring(1));
+                deleteUser(id);
+                loadData(request);
+                view = "administration";
+                
+                
+            }
 
             default -> {
 
@@ -115,11 +128,7 @@ public class UsersController extends HttpServlet {
 
             action = "/modify";
 
-        } else if(request.getServletPath().contains("/remove")){
-
-            action = "/remove";
-
-        }
+        } 
         else{
             
             action = "/error";
@@ -141,14 +150,6 @@ public class UsersController extends HttpServlet {
 
             }
             
-            case "/remove" ->{
-                
-                Long id = Long.valueOf(request.getPathInfo());
-                deleteUser(id);
-                view = "administration";
-                
-                
-            }
             
 
         }
