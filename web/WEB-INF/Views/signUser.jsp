@@ -21,7 +21,7 @@
                 </div>
             </c:if>
             
-            <form action="${pageContext.request.contextPath}/signup" method="POST">
+            <form action="${pageContext.request.contextPath}/signup/save" method="POST">
                 
                 <div class="mb-3">
                     <label for="name" class="form-label">Nombre Completo</label>

@@ -24,7 +24,7 @@
             
             <hr>
             
-            <a href="/daw" class="btn btn-primary">
+            <a href="${pageContext.request.contextPath}" class="btn btn-primary">
                 Volver
             </a>
         </div>

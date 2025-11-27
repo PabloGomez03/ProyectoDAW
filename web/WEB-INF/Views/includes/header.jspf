@@ -24,11 +24,28 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
+
                 <div class="collapse navbar-collapse" id="main-nav">
-                    <form class="d-flex w-50 mx-auto" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Buscar productos...">
-                        <button class="btn btn-outline-success" type="submit">Buscar</button>
-                    </form>
+                    <c:choose>
+                        <c:when test="${sessionScope.user.role != 'admin-user'}">
+                            
+                            <form class="d-flex w-50 mx-auto" role="search" 
+                                  action="${pageContext.request.contextPath}/products/list" 
+                                  method="GET">
+
+                                <input class="form-control me-2" 
+                                       type="search" 
+                                       name="query" 
+                                       placeholder="Buscar productos..." 
+                                       value="${param.search}" 
+                                       aria-label="Buscar">
+
+                                <button class="btn btn-outline-success" type="submit">Buscar</button>
+                            </form>
+
+                        </c:when>    
+                    </c:choose>
+
 
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <c:choose>
@@ -79,8 +96,8 @@
 
 
 
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="${pageContext.request.contextPath}/logout" onclick=" return logout();">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="${pageContext.request.contextPath}/logout" onclick=" return logout();">
                                         <i class="bi bi-box-arrow-left"></i> Logout
                                     </a>
                                 </li>
@@ -96,11 +113,11 @@
 </html>
 
 <script>
-    function logout(){
-        
-     return confirm("Deseas cerrar sesión?");
+    function logout() {
+
+        return confirm("Deseas cerrar sesión?");
 
     }
-    
+
 </script>
 

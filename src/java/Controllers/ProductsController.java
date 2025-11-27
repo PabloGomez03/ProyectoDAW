@@ -32,7 +32,7 @@ import java.util.logging.Level;
  *
  * @author apolo
  */
-@WebServlet(name = "ProductsController", urlPatterns = {"/products/*","/products/delete/*"})
+@WebServlet(name = "ProductsController", urlPatterns = {"/products/*", "/products/delete/*"})
 public class ProductsController extends HttpServlet {
 
     @PersistenceContext(unitName = "DAWFinalPU")
@@ -50,38 +50,45 @@ public class ProductsController extends HttpServlet {
         String view = "", action = "/error";
 
         if (request.getServletPath().equals("/products")) {
-           
+
             action = request.getPathInfo();
 
-            
-        }
-        else if(request.getServletPath().equals("/products/delete")){
-            
+        } else if (request.getServletPath().equals("/products/delete")) {
+
             action = request.getPathInfo();
-            
+
+        } else if (request.getServletPath().equals("/products/list")) {
+
+            action = "/list";
+
         }
 
         switch (action) {
-            
-            case "/new" ->{
-                
+
+            case "/new" -> {
+
                 view = "newproduct";
-                
+
             }
-            
-            default ->{
-                
+            case "/list" -> {
+
+                String query = request.getParameter("search");
+                loadIndex(request);
+                view = "searchres";
+
+            }
+
+            default -> {
+
                 Long id = Long.valueOf(request.getPathInfo().substring(1));
                 deleteProduct(id);
                 loadData(request);
                 view = "administration";
-                
-                
-                
+
             }
 
         }
-        
+
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/Views/" + view + ".jsp");
         rd.forward(request, response);
 
@@ -92,71 +99,59 @@ public class ProductsController extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-        
+
         String view = "", action = "/error";
 
         if (request.getServletPath().equals("/products")) {
-           
+
             action = request.getPathInfo();
 
-            
         }
-        
+
         switch (action) {
-            
-            case "/create" ->{
-                
-                String name,price,stock,pathImage,description,category;
-                
+
+            case "/create" -> {
+
+                String name, price, stock, pathImage, description, category;
+
                 name = request.getParameter("name");
                 price = request.getParameter("price");
                 stock = request.getParameter("stock");
                 pathImage = request.getParameter("pathImage");
                 description = request.getParameter("description");
                 category = request.getParameter("category");
-                
-                Product p = new Product(name, description, Float.valueOf(price), Integer.valueOf(stock), category, pathImage);
+
+                Product p = new Product(name, description, Float.valueOf(price), Integer.valueOf(stock), category, "img/" + pathImage);
                 saveProduct(p);
                 loadData(request);
                 view = "administration";
-                
-                
-                
-                
-                
-                
+
             }
-                
-                
+
         }
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/Views/" + view + ".jsp");
         rd.forward(request, response);
 
     }
-    
-    public void deleteProduct(Long id){
-        
-        try{
+
+    public void deleteProduct(Long id) {
+
+        try {
             utx.begin();
-            
+
             em.remove(em.find(Product.class, id));
-            userLog.log(Level.INFO,"Product "+id+" deleted!");
-            
+            userLog.log(Level.INFO, "Product " + id + " deleted!");
+
             utx.commit();
+        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException e) {
+
         }
-        catch(HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException e){
-            
-            
-        }
-        
-        
-        
+
     }
-    
+
     public void loadData(HttpServletRequest resquest) {
 
         try {
-            
 
             List<Product> ProductList = null;
             List<User> UserList = null;
@@ -170,42 +165,62 @@ public class ProductsController extends HttpServlet {
             resquest.setAttribute("plist", ProductList);
             resquest.setAttribute("ulist", UserList);
 
-            
         } catch (SecurityException | IllegalStateException ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
-    
-    public boolean saveProduct(Product p){
+
+    public void loadIndex(HttpServletRequest request) {
+
+        String queryText = request.getParameter("query");
+        List<Product> results = null;
+
+        try {
+            // Si hay texto, buscamos. Si no, lista vacía o todos (como prefieras)
+            if (queryText != null && !queryText.trim().isEmpty()) {
+                TypedQuery<Product> q = em.createQuery(
+                        "SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(:search) OR LOWER(p.description) LIKE LOWER(:search)",
+                        Product.class
+                );
+                q.setParameter("search", "%" + queryText + "%");
+                results = q.getResultList();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         
+        request.setAttribute("searchResults", results);
+        request.setAttribute("searchQuery", queryText); 
+
+    }
+
+    public boolean saveProduct(Product p) {
+
         boolean cond = false;
-        
+
         try {
             utx.begin();
-            
-             Product pr = em.find(Product.class, p.getId());
-            
-            if(pr == null){
-                
+
+            if (p.getId() == null) {
+
                 em.persist(p);
                 userLog.log(Level.INFO, "New Product saved");
                 cond = true;
-                
+
             }
-            
+
             utx.commit();
         } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException e) {
             userLog.log(Level.SEVERE, "exception caught", e);
             throw new RuntimeException(e);
-        }
-        finally{
-            
+        } finally {
+
             return cond;
-            
+
         }
-        
-        
+
     }
 
 }

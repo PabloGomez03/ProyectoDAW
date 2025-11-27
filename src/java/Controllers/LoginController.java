@@ -34,7 +34,7 @@ import java.util.logging.Level;
  *
  * @author apolo
  */
-@WebServlet(name = "LoginController", urlPatterns = {"/login", "/signup", "/logout", ""})
+@WebServlet(name = "LoginController", urlPatterns = {"/login", "/signup","/signup/*", "/logout", ""})
 public class LoginController extends HttpServlet {
 
     @PersistenceContext(unitName = "DAWFinalPU")
@@ -143,7 +143,7 @@ public class LoginController extends HttpServlet {
 
         } else if (request.getServletPath().equals("/signup")) {
 
-            action = "/signup";
+            action = request.getContextPath();
 
         } else {
 
@@ -173,7 +173,7 @@ public class LoginController extends HttpServlet {
                 }
 
             }
-            case "/signup" -> {
+            case "/save" -> {
 
                 name = request.getParameter("name");
                 email = request.getParameter("email");
@@ -281,7 +281,9 @@ public class LoginController extends HttpServlet {
                     List<Product> list = null;
 
                     TypedQuery<Product> query = em.createQuery("SELECT p FROM Product p", Product.class);
+                    query.setMaxResults(4);
                     list = query.getResultList();
+                    
 
                     request.setAttribute("list", list);
 

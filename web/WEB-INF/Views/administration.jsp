@@ -101,7 +101,7 @@
                                         </c:choose>
                                     </td>
                                     <td class="text-end">
-                                        <a href="${pageContext.request.contextPath}/products/delete/${p.id}" class="btn btn-outline-danger btn-sm" title="Eliminar">
+                                        <a href="${pageContext.request.contextPath}/products/delete/${p.id}" class="btn btn-outline-danger btn-sm" title="Eliminar" onclick="return confirm('Desea eliminar el producto?')">
                                             <i class="bi bi-trash"></i>
                                         </a>
                                     </td>
@@ -142,9 +142,19 @@
                                         </c:if>
                                     </td>
                                     <td class="text-end">
-                                        <a href="${pageContext.request.contextPath}/remove/${u.id}" class="btn btn-outline-danger btn-sm" title="Eliminar Usuario">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
+                                        <c:choose>
+                                            <c:when test ="${u.role == 'admin-user'}">
+                                                <a href="#" class="btn btn-outline-danger btn-sm" title="Eliminar Usuario" onclick="return alert('No se puede eliminar al administrador');return false;">
+                                                    <i class="bi bi-trash"></i>
+                                                </a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="${pageContext.request.contextPath}/remove/${u.id}" class="btn btn-outline-danger btn-sm" title="Eliminar Usuario" onclick="return confirm('Desea eliminar el usuario?')">
+                                                    <i class="bi bi-trash"></i>
+                                                </a>
+                                            </c:otherwise>
+
+                                        </c:choose>
                                     </td>
                                 </tr>
                             </c:forEach>
