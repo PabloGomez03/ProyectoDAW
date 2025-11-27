@@ -1,7 +1,4 @@
-<%-- 
-  Página: index.jsp (La Vista)
-  Ahora es dinámica y lee la variable "listaDeProductos"
---%>
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <c:set var="pageTitle" value="DressStyle - Inicio" />
@@ -21,23 +18,30 @@
 
 <h2 class="my-4">Productos Destacados</h2>
 <div class="row">
-    
+
     <c:forEach var="prod" items="${requestScope.list}">
-    
+
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card h-100">
-                
+
                 <img src="${prod.pathImage}" class="card-img-top" alt="${prod.name}">
-                
+
                 <div class="card-body">
                     <h5 class="card-title">${prod.name}</h5>
                     <p class="card-text">${prod.price}</p>
-                    <a href="#" class="btn btn-primary">Ver producto</a>
+                    <c:if test="${prod.category != 'Bolsos'}">
+                    <select class="form-select mb-2" name="size">
+                        <option value="S">Talla S</option>
+                        <option value="M" selected>Talla M</option>
+                        <option value="L">Talla L</option>
+                    </select>
+                    </c:if>
+                    <a href="#" class="btn btn-primary">Añadir al carrito</a>
                 </div>
             </div>
         </div>
-        
+
     </c:forEach> 
-    
+
 </div>
 <%@ include file="includes/footer.jspf" %>

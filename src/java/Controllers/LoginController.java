@@ -29,12 +29,13 @@ import jakarta.transaction.UserTransaction;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
  * @author apolo
  */
-@WebServlet(name = "LoginController", urlPatterns = {"/login", "/signup","/signup/*", "/logout", ""})
+@WebServlet(name = "LoginController", urlPatterns = {"/login", "/signup", "/signup/*", "/logout", ""})
 public class LoginController extends HttpServlet {
 
     @PersistenceContext(unitName = "DAWFinalPU")
@@ -110,7 +111,7 @@ public class LoginController extends HttpServlet {
 
             }
             case "" -> {
-                
+
                 view = "index";
                 loadIndex(request);
 
@@ -143,11 +144,13 @@ public class LoginController extends HttpServlet {
 
         } else if (request.getServletPath().equals("/signup")) {
 
-            action = request.getContextPath();
+            if (request.getPathInfo() != null) {
+                action = request.getPathInfo();
+            }
 
         } else {
 
-            action = "error";
+            action = "/error";
 
         }
 
@@ -157,15 +160,14 @@ public class LoginController extends HttpServlet {
 
                 email = request.getParameter("email");
                 password = request.getParameter("password");
-                        
 
-                User u = logUser(email,password);
+                User u = logUser(email, password);
 
                 if (u != null) {
-                    
+
                     session.setAttribute("user", u);
                     view = "loginOK";
-                    
+
                 } else {
 
                     request.setAttribute("login", "Los datos introducidos no son correctos!");
@@ -180,30 +182,28 @@ public class LoginController extends HttpServlet {
                 password = request.getParameter("password");
                 address = request.getParameter("address");
 
+                String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));
+
                 ShoppingCart cart = new ShoppingCart();
 
-                User user = new User(cart, name, email, password, address, "user");
+                User user = new User(cart, name, email, hashedPassword, address, "user");
 
-                if(saveUser(user)){
-                    
+                if (saveUser(user)) {
+
                     view = "signupOK";
-                    
-                    
-                }
-                else{
-                    
-                    request.setAttribute("sign", "Ya existe un usuario con ese email registrado!!");
-                    view = "signup";
-                    
-                }
 
-                
+                } else {
+
+                    request.setAttribute("sign", "Ya existe un usuario con ese email registrado!!");
+                    view = "signUser";
+
+                }
 
             }
-            case "/error" ->{
-                
+            case "/error" -> {
+
                 view = "error";
-                
+
             }
 
         }
@@ -213,37 +213,39 @@ public class LoginController extends HttpServlet {
 
     }
 
-
     public boolean saveUser(User u) {
-
-        boolean cond = false;
         
+        boolean cond = false;
+
         try {
-            utx.begin();
-            
-            User user = em.find(User.class, u.getId());
-            
-            if(user == null){
-                
+            List<User> existing = em.createNamedQuery("User.findByEmail", User.class)
+                    .setParameter("qemail", u.getEmail())
+                    .getResultList();
+
+            if (existing.isEmpty()) {
+
+                utx.begin();
                 em.persist(u);
+                utx.commit();
+
                 userLog.log(Level.INFO, "New User saved");
                 cond = true;
-                
             }
-            
-            utx.commit();
-        } catch (HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException e) {
-            userLog.log(Level.SEVERE, "exception caught", e);
-            throw new RuntimeException(e);
+
+        } catch (Exception e) {
+            userLog.log(Level.SEVERE, "Error guardando usuario", e);
+            try {
+                if (utx.getStatus() == jakarta.transaction.Status.STATUS_ACTIVE) {
+                    utx.rollback();
+                }
+            } catch (Exception ex) {
+            }
         }
-        finally{
-            
-            return cond;
-            
-        }
+
+        return cond;
     }
 
-    public User logUser(String email,String password) {
+    public User logUser(String email, String password) {
 
         User u = null;
 
@@ -254,11 +256,11 @@ public class LoginController extends HttpServlet {
             q.setParameter("qemail", email);
 
             u = (User) q.getSingleResult();
-            
-            if(!u.getPassword().equals(password)){
-                
+
+            boolean correctPassword = BCrypt.checkpw(password, u.getPassword());
+
+            if (!correctPassword) {
                 u = null;
-                
             }
 
             utx.commit();
@@ -273,26 +275,25 @@ public class LoginController extends HttpServlet {
         }
 
     }
-    public void loadIndex(HttpServletRequest request){
-        
+
+    public void loadIndex(HttpServletRequest request) {
+
         try {
-                    utx.begin();
+            utx.begin();
 
-                    List<Product> list = null;
+            List<Product> list = null;
 
-                    TypedQuery<Product> query = em.createQuery("SELECT p FROM Product p", Product.class);
-                    query.setMaxResults(4);
-                    list = query.getResultList();
-                    
+            TypedQuery<Product> query = em.createQuery("SELECT p FROM Product p", Product.class);
+            query.setMaxResults(4);
+            list = query.getResultList();
 
-                    request.setAttribute("list", list);
+            request.setAttribute("list", list);
 
-                    utx.commit();
-                } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
-                    Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
-                }
-        
-        
+            utx.commit();
+        } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
 }

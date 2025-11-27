@@ -177,7 +177,7 @@ public class ProductsController extends HttpServlet {
         List<Product> results = null;
 
         try {
-            // Si hay texto, buscamos. Si no, lista vacía o todos (como prefieras)
+            
             if (queryText != null && !queryText.trim().isEmpty()) {
                 TypedQuery<Product> q = em.createQuery(
                         "SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(:search) OR LOWER(p.description) LIKE LOWER(:search)",

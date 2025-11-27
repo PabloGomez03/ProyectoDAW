@@ -13,10 +13,10 @@
         <div class="card shadow-sm p-4">
             <h2 class="text-center mb-4">Crear una Cuenta</h2>
             
-            <c:if test="${not empty requestScope.login}">
+            <c:if test="${not empty requestScope.sign}">
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <i class="bi bi-exclamation-triangle-fill"></i> 
-                    <c:out value="${requestScope.login}"/>
+                    <c:out value="${requestScope.sign}"/>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             </c:if>
