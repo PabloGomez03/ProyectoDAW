@@ -18,7 +18,13 @@
             <div class="card-body d-flex flex-column">
                 <h5 class="card-title">${p.name}</h5>
                 <p class="card-text text-primary fw-bold">${p.price}?</p>
-                
+                <c:if test="${p.category != 'Bolsos'}">
+                    <select class="form-select mb-2" name="size">
+                        <option value="S">Talla S</option>
+                        <option value="M" selected>Talla M</option>
+                        <option value="L">Talla L</option>
+                    </select>
+                </c:if>
                 <div class="mt-auto">
                     <a href="#" class="btn btn-primary w-100">Añadir al Carrito</a>
                 </div>

@@ -76,14 +76,14 @@ public class ProductsController extends HttpServlet {
             }
             case "/searchAjax" -> {
 
-                String query = request.getParameter("q");
+                
                 loadQuery(request);
                 view = "productFrag";
 
             }
             case "/search" -> {
 
-                String query = request.getParameter("q");
+                
                 loadQuery(request);
                 view = "searchres"; 
 

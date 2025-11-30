@@ -1,4 +1,4 @@
-
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="es">
@@ -75,7 +75,7 @@
                                         <li class="nav-item">
                                             <a class="nav-link" href = "${pageContext.request.contextPath}/admin"> 
                                                 <i class="bi bi-gear-fill"></i>
-                                                Gestión
+                                                GestiÃ³n
                                             </a>
                                         </li>
                                     </c:when>
@@ -115,7 +115,7 @@
 <script>
     function logout() {
 
-        return confirm("Deseas cerrar sesión?");
+        return confirm("Deseas cerrar sesiÃ³n?");
 
     }
 
