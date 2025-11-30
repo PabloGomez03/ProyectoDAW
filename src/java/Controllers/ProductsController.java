@@ -183,28 +183,26 @@ public class ProductsController extends HttpServlet {
     }
 
     public void loadQuery(HttpServletRequest request) {
+    String queryText = request.getParameter("q"); 
+    List<Product> results = null;
 
-        String queryText = request.getParameter("query");
-        List<Product> results = null;
-
-        try {
-
-            if (queryText != null && !queryText.trim().isEmpty()) {
-                TypedQuery<Product> q = em.createQuery(
-                        "SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(:search) OR LOWER(p.description) LIKE LOWER(:search)",
-                        Product.class
-                );
-                q.setParameter("search", "%" + queryText + "%");
-                results = q.getResultList();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+    try {
+        if (queryText != null && !queryText.trim().isEmpty()) {
+            TypedQuery<Product> q = em.createQuery(
+                    "SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(:search)",
+                    Product.class
+            );
+            q.setParameter("search", "%" + queryText + "%");
+            results = q.getResultList();
         }
-
-        request.setAttribute("searchResults", results);
-        request.setAttribute("searchQuery", queryText);
-
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+
+   
+    request.setAttribute("list", results); 
+    request.setAttribute("searchQuery", queryText);
+}
 
     public boolean saveProduct(Product p) {
 

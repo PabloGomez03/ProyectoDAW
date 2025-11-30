@@ -20,7 +20,7 @@
                 <p class="card-text text-primary fw-bold">${p.price}?</p>
                 
                 <div class="mt-auto">
-                    <a href="#" class="btn btn-primary w-100">Ver Producto</a>
+                    <a href="#" class="btn btn-primary w-100">Añadir al Carrito</a>
                 </div>
             </div>
         </div>

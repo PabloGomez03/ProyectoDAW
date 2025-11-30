@@ -29,14 +29,18 @@
                     <c:choose>
                         <c:when test="${sessionScope.user.role != 'admin-user'}">
 
-                            <form class="d-flex w-50 mx-auto" role="search"action="${pageContext.request.contextPath}/products/search" 
-                                  method="GET">
+                            <form class="d-flex w-50 mx-auto" role="search" 
+                                  action="${pageContext.request.contextPath}/products/searchAjax" 
+                                  method="GET"
+                                  onsubmit="buscarProductos(event)">
+
                                 <input class="form-control me-2" 
                                        type="search" 
                                        id="searchInput" 
-                                       placeholder="Buscar..." 
-                                       value ="${param.q}"
-                                       > <button class="btn btn-outline-success" type="submit">Buscar</button>
+                                       name="q" 
+                                       placeholder="Buscar productos..." 
+                                       aria-label="Buscar"
+                                       value="${param.q}"> <button class="btn btn-outline-success" type="submit">Buscar</button>
                             </form>
 
                         </c:when>    

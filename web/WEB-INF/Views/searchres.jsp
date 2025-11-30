@@ -6,6 +6,8 @@
 <div class="container mt-4">
     <h2 class="mb-4">Resultados de búsqueda</h2>
 
+    <small class="text-muted fs-6">(${list != null ? list.size() : 0} productos encontrados)</small>
+
     <div class="row" id="contenedorProductos">
         <%@ include file="productFrag.jsp" %>
     </div>
