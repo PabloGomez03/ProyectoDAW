@@ -57,9 +57,13 @@ public class ProductsController extends HttpServlet {
 
             action = request.getPathInfo();
 
-        } else if (request.getServletPath().equals("/products/list")) {
+        } else if (request.getServletPath().equals("/products/search")) {
 
-            action = "/list";
+            action = "/search";
+
+        } else if (request.getServletPath().equals("/products/searchAjax")) {
+
+            action = "/searchAjax";
 
         }
 
@@ -70,11 +74,18 @@ public class ProductsController extends HttpServlet {
                 view = "newproduct";
 
             }
-            case "/list" -> {
+            case "/searchAjax" -> {
 
-                String query = request.getParameter("search");
-                loadIndex(request);
-                view = "searchres";
+                String query = request.getParameter("q");
+                loadQuery(request);
+                view = "productFrag";
+
+            }
+            case "/search" -> {
+
+                String query = request.getParameter("q");
+                loadQuery(request);
+                view = "searchres"; 
 
             }
 
@@ -171,13 +182,13 @@ public class ProductsController extends HttpServlet {
 
     }
 
-    public void loadIndex(HttpServletRequest request) {
+    public void loadQuery(HttpServletRequest request) {
 
         String queryText = request.getParameter("query");
         List<Product> results = null;
 
         try {
-            
+
             if (queryText != null && !queryText.trim().isEmpty()) {
                 TypedQuery<Product> q = em.createQuery(
                         "SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(:search) OR LOWER(p.description) LIKE LOWER(:search)",
@@ -190,9 +201,8 @@ public class ProductsController extends HttpServlet {
             e.printStackTrace();
         }
 
-        
         request.setAttribute("searchResults", results);
-        request.setAttribute("searchQuery", queryText); 
+        request.setAttribute("searchQuery", queryText);
 
     }
 

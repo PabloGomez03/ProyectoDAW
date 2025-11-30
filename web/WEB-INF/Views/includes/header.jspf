@@ -28,19 +28,15 @@
                 <div class="collapse navbar-collapse" id="main-nav">
                     <c:choose>
                         <c:when test="${sessionScope.user.role != 'admin-user'}">
-                            
-                            <form class="d-flex w-50 mx-auto" role="search" 
-                                  action="${pageContext.request.contextPath}/products/list" 
-                                  method="GET">
 
+                            <form class="d-flex w-50 mx-auto" role="search"action="${pageContext.request.contextPath}/products/search" 
+                                  method="GET">
                                 <input class="form-control me-2" 
                                        type="search" 
-                                       name="query" 
-                                       placeholder="Buscar productos..." 
-                                       value="${param.search}" 
-                                       aria-label="Buscar">
-
-                                <button class="btn btn-outline-success" type="submit">Buscar</button>
+                                       id="searchInput" 
+                                       placeholder="Buscar..." 
+                                       value ="${param.q}"
+                                       > <button class="btn btn-outline-success" type="submit">Buscar</button>
                             </form>
 
                         </c:when>    
