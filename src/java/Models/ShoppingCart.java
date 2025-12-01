@@ -8,8 +8,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -23,25 +28,35 @@ public class ShoppingCart implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private int numOrders;
+    
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+    
+    @Transient
+    private List<Order> activeOrders = new ArrayList<>();
     
 
-    public ShoppingCart() {
-        
-        numOrders = 0;
-       
-    }
+    public ShoppingCart() {}
 
     public int getNumOrders() {
-        return numOrders;
-    }
-
-    public void setNumOrders(int numOrders) {
-        this.numOrders = numOrders;
+        return activeOrders.size();
     }
     
+    public List<Order> getActiveOrders() {
+        return activeOrders;
+    }
     
+    public void addOrder(Order o) {
+        this.activeOrders.add(o);
+    }
     
+    public Order getLastOrder() {
+        if (activeOrders.isEmpty()) return null;
+        return activeOrders.get(activeOrders.size() - 1);
+    }
+    
+       
     public Long getId() {
         return id;
     }

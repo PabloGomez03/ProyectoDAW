@@ -214,36 +214,41 @@ public class LoginController extends HttpServlet {
     }
 
     public boolean saveUser(User u) {
+    boolean cond = false;
+
+    try {
         
-        boolean cond = false;
+        em.createNamedQuery("User.findByEmail", User.class)
+          .setParameter("qemail", u.getEmail())
+          .getSingleResult();
 
+        
+        
+        cond = false;
+
+    } catch (jakarta.persistence.NoResultException e) {
+        
         try {
-            List<User> existing = em.createNamedQuery("User.findByEmail", User.class)
-                    .setParameter("qemail", u.getEmail())
-                    .getResultList();
-
-            if (existing.isEmpty()) {
-
-                utx.begin();
-                em.persist(u);
-                utx.commit();
-
-                userLog.log(Level.INFO, "New User saved");
-                cond = true;
-            }
-
-        } catch (Exception e) {
-            userLog.log(Level.SEVERE, "Error guardando usuario", e);
-            try {
-                if (utx.getStatus() == jakarta.transaction.Status.STATUS_ACTIVE) {
-                    utx.rollback();
-                }
-            } catch (Exception ex) {
-            }
+            utx.begin();
+            em.persist(u);
+            utx.commit();
+            userLog.log(Level.INFO, "New User saved");
+            cond = true;
+        } catch (Exception txEx) {
+            
+            userLog.log(Level.SEVERE, "Error en la transacción al guardar", txEx);
+            try { utx.rollback(); } catch (Exception r) {}
+            cond = false;
         }
 
-        return cond;
+    } catch (Exception e) {
+        
+        userLog.log(Level.SEVERE, "Error inesperado buscando usuario", e);
+        cond = false;
     }
+
+    return cond;
+}
 
     public User logUser(String email, String password) {
 

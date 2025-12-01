@@ -57,11 +57,7 @@ public class ProductsController extends HttpServlet {
 
             action = request.getPathInfo();
 
-        } else if (request.getServletPath().equals("/products/search")) {
-
-            action = "/search";
-
-        } else if (request.getServletPath().equals("/products/searchAjax")) {
+        }  else if (request.getServletPath().equals("/products/searchAjax")) {
 
             action = "/searchAjax";
 
@@ -78,14 +74,7 @@ public class ProductsController extends HttpServlet {
 
                 
                 loadQuery(request);
-                view = "productFrag";
-
-            }
-            case "/search" -> {
-
-                
-                loadQuery(request);
-                view = "searchres"; 
+                view = "searchres";
 
             }
 

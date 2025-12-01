@@ -1,4 +1,4 @@
-
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
@@ -17,7 +17,7 @@
         <div class="card shadow-sm">
             <div class="card-header bg-primary text-white p-3">
                 <h3 class="mb-0">
-                    <i class="bi bi-plus-circle-fill"></i> Añadir Nuevo Producto
+                    <i class="bi bi-plus-circle-fill"></i> AÃ±adir Nuevo Producto
                 </h3>
             </div>
             
@@ -31,7 +31,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="description" class="form-label">Descripción</label>
+                        <label for="description" class="form-label">DescripciÃ³n</label>
                         <textarea class="form-control" id="description" name="description" rows="3"></textarea>
                     </div>
 
@@ -47,7 +47,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="category" class="form-label">Categoría</label>
+                        <label for="category" class="form-label">CategorÃ­a</label>
                         <input type="text" class="form-control" id="category" name="category" placeholder="Ej: Camisetas, Pantalones..." required>
                     </div>
 

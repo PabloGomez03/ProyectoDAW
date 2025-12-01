@@ -11,9 +11,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -31,6 +34,9 @@ public class Order implements Serializable {
     private Date orderDate;
     private float totalAmount;
     private String state;
+    
+    @Transient
+    private List<ProductItem> items = new ArrayList<>();
     
     @ManyToOne(fetch=FetchType.LAZY)
     private ShoppingCart cart;
@@ -80,6 +86,22 @@ public class Order implements Serializable {
     public void setState(String state) {
         this.state = state;
     }
+    
+    public void addItem(ProductItem item) {
+        this.items.add(item);
+    }
+
+    public List<ProductItem> getItems() {
+        return items;
+    }
+    
+    public float calculateTotal() {
+        float total = 0;
+        for (ProductItem item : items) {
+            total += item.getPrice(); 
+        }
+        return total;
+    }
 
     
 
@@ -92,7 +114,7 @@ public class Order implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        
         if (!(object instanceof Order)) {
             return false;
         }

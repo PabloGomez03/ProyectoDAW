@@ -31,12 +31,12 @@
                     <p class="card-text">${prod.price}</p>
                     <c:if test="${prod.category != 'Bolsos'}">
                     <select class="form-select mb-2" name="size">
-                        <option value="S">Talla S</option>
-                        <option value="M" selected>Talla M</option>
-                        <option value="L">Talla L</option>
+                        <option value="S" id="s">S</option>
+                        <option value="M" id ="m" selected>M</option>
+                        <option value="L" id ="l">L</option>
                     </select>
                     </c:if>
-                    <a href="#" class="btn btn-primary">Añadir al carrito</a>
+                    <a href="${pageContext.request.contextPath}/cart/add" class="btn btn-primary">Añadir al carrito</a>
                 </div>
             </div>
         </div>
