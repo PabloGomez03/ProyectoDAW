@@ -23,4 +23,37 @@ function searchProds(event) {
     }
 }
 
+// Variables temporales para guardar qué producto estamos intentando añadir
+let productoTempId = null;
+let tallaTempId = null;
+
+function gestionarCompra(idProducto, idSelectTalla) {
+    // 1. Capturamos los datos del producto
+    productoTempId = idProducto;
+    
+    // Obtenemos la talla (si es bolso, el input hidden tiene valor "Única")
+    const select = document.getElementById(idSelectTalla);
+    tallaTempId = select ? select.value : "Única";
+
+    // 2. DECISIÓN
+    if (numPedidosUsuario > 1) {
+        // Si hay más de 1 pedido -> Abrimos el Modal
+        const modal = new bootstrap.Modal(document.getElementById('modalSeleccionPedido'));
+        modal.show();
+    } else {
+        // Si hay 0 o 1 pedido -> Enviamos directo (índice vacío)
+        enviarAlCarrito('');
+    }
+}
+
+function enviarAlCarrito(indicePedido) {
+    // 1. Rellenamos el formulario oculto del footer
+    document.getElementById("hiddenId").value = productoTempId;
+    document.getElementById("hiddenSize").value = tallaTempId;
+    document.getElementById("hiddenOrderIdx").value = indicePedido; // Puede ser un número o vacío
+
+    // 2. Lo enviamos
+    document.getElementById("formCarritoOculto").submit();
+}
+
 

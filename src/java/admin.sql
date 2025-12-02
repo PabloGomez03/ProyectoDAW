@@ -1,8 +1,8 @@
 
 
-INSERT INTO users (cart_id, name, email, password, address, role) VALUES (NULL, 'admin', 'admin@admin.com', 'admin', '', 'admin-user')
+INSERT INTO users (name, email, password, address, role) VALUES ('admin', 'admin@admin.com', 'admin', '', 'admin-user')
 
-INSERT INTO users (cart_id, name, email, password, address, role) VALUES (NULL, 'Pablo', 'apolox.12@hotmail.com', 'apolox', 'Calle Niagara', 'user')
+INSERT INTO users (name, email, password, address, role) VALUES ('Pablo', 'apolox.12@hotmail.com', 'apolox', 'Calle Niagara', 'user')
 
 INSERT INTO products (name, description, price,stock,category,pathImage,order_id) VALUES ('Camisa Elegante', 'Una camisa de alta calidad para ocasiones especiales.', 29.99,50,'Camisa','img/camisa1.png',NULL)
 

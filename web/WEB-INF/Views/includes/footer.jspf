@@ -4,6 +4,46 @@
     <p>&copy; 2025 DressStyle. Todos los derechos reservados.</p>
 </footer>
 
+<form id="formCarritoOculto" action="${pageContext.request.contextPath}/cart" method="POST" style="display:none;">
+    <input type="hidden" name="action" value="add">
+    <input type="hidden" name="id" id="hiddenId">
+    <input type="hidden" name="size" id="hiddenSize">
+    <input type="hidden" name="orderIdx" id="hiddenOrderIdx"> </form>
+
+<div class="modal fade" id="modalSeleccionPedido" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Tienes varios pedidos abiertos</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Dónde quieres añadir este producto?</p>
+                <div class="d-grid gap-2">
+                    <c:if test="${not empty sessionScope.user.cart.activeOrders}">
+                        <c:forEach items="${sessionScope.user.cart.activeOrders}" var="order" varStatus="status">
+                            <button class="btn btn-outline-dark text-start" 
+                                    onclick="enviarAlCarrito(${status.index})">
+                                <strong>Pedido #${status.count}</strong> 
+                                <span class="text-muted float-end">Total: ${order.totalAmount}?</span>
+                            </button>
+                        </c:forEach>
+                    </c:if>
+                </div>
+                <hr>
+                <button class="btn btn-success w-100" onclick="enviarAlCarrito('')">
+                    <i class="bi bi-plus-circle"></i> Crear Nuevo Pedido
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Si el usuario tiene carrito, contamos las órdenes. Si no, es 0.
+    const numPedidosUsuario = ${not empty sessionScope.user.cart.activeOrders ? sessionScope.user.cart.activeOrders.size() : 0};
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/functions.js"></script>
 </body>

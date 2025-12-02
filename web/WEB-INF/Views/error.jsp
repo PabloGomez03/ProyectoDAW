@@ -1,8 +1,3 @@
-<%-- 
-    Document   : error
-    Created on : 16 oct 2025, 13:54:16
-    Author     : apolo
---%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>

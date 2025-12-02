@@ -5,8 +5,13 @@
 package Controllers;
 
 import Models.Order;
+import Models.Product;
+import Models.ProductItem;
 import Models.ShoppingCart;
 import Models.User;
+import jakarta.annotation.Resource;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,6 +21,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.UserTransaction;
+import java.util.logging.Logger;
 
 /**
  *
@@ -23,6 +30,13 @@ import jakarta.servlet.http.HttpSession;
  */
 @WebServlet(name = "CartController", urlPatterns = {"/cart", "/cart/*"})
 public class CartController extends HttpServlet {
+    
+    @PersistenceContext(unitName = "DAWFinalPU")
+    private EntityManager em;
+    @Resource
+    private UserTransaction utx;
+
+    private static final Logger userLog = Logger.getLogger(LoginController.class.getName());
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -68,11 +82,6 @@ public class CartController extends HttpServlet {
 
             }
             
-            case "/add" -> {
-                
-                
-
-            }
 
             case "/error" -> {
 
@@ -134,6 +143,12 @@ public class CartController extends HttpServlet {
                 view = "cart";
 
             }
+            
+            case "/add" -> {
+                
+                addProduct(request, role);
+
+            }
 
             case "/error" -> {
 
@@ -146,6 +161,55 @@ public class CartController extends HttpServlet {
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/Views/" + view + ".jsp");
         rd.forward(request, response);
 
+    }
+    
+    public void addProduct(HttpServletRequest request, User u){
+        
+        try {
+                Long prodId = Long.parseLong(request.getParameter("id"));
+                String size = request.getParameter("size");
+                
+                
+                String orderIdxStr = request.getParameter("orderIdx");
+
+                
+                Product p = em.find(Product.class, prodId);
+                
+                
+                ProductItem item = new ProductItem(size, p.getName(), p.getDescription(), p.getPrice(), 1, p.getCategory(), p.getPathImage());
+                item.setId(p.getId());
+
+                
+                Order targetOrder = null;
+                
+                if (orderIdxStr != null && !orderIdxStr.isEmpty()) {
+                    
+                    int index = Integer.parseInt(orderIdxStr);
+                    if (index >= 0 && index < u.getCart().getActiveOrders().size()) {
+                        targetOrder = u.getCart().getActiveOrders().get(index);
+                    }
+                }
+
+                
+                if (targetOrder == null) {
+                    if (u.getCart().getActiveOrders().isEmpty()) {
+                        
+                        targetOrder = new Order(new java.util.Date(), 0, "Pendiente");
+                        u.getCart().addOrder(targetOrder);
+                    } else {
+                        
+                        targetOrder = u.getCart().getLastOrder();
+                    }
+                }
+                
+                
+                targetOrder.addItem(item);
+                targetOrder.setTotalAmount(targetOrder.calculateTotal()); 
+
+            } catch (Exception e) {
+                e.printStackTrace(); 
+            }
+        
     }
 
 }
