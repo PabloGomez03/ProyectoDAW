@@ -1,4 +1,3 @@
-
 package Controllers;
 
 import Models.Order;
@@ -34,10 +33,9 @@ public class CartController extends HttpServlet {
     private EntityManager em;
     @Resource
     private UserTransaction utx;
-    
+
     private static final Logger userLog = Logger.getLogger(LoginController.class.getName());
 
-    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -50,15 +48,14 @@ public class CartController extends HttpServlet {
             return;
         }
 
-        
-        if (user.getCart() == null) user.setCart(new ShoppingCart());
+        if (user.getCart() == null) {
+            user.setCart(new ShoppingCart());
+        }
 
-        
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/Views/cart.jsp");
         rd.forward(request, response);
     }
 
- 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -70,32 +67,36 @@ public class CartController extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
-        
-        if (user.getCart() == null) user.setCart(new ShoppingCart());
 
-       
+        if (user.getCart() == null) {
+            ShoppingCart newCart = new ShoppingCart();
+            newCart.setUser(user); 
+            user.setCart(newCart);
+
+            
+            em.merge(user);
+        }
+
         String pathInfo = request.getPathInfo();
         String action = "";
 
-        
         if (pathInfo != null && !pathInfo.equals("/")) {
             action = pathInfo;
         } else {
-            
+
             String paramAction = request.getParameter("action");
             if (paramAction != null) {
-                action = "/" + paramAction; 
+                action = "/" + paramAction;
             }
         }
 
-        
         switch (action) {
             case "/newcart" -> {
                 // Crear nuevo pedido
                 ShoppingCart c = user.getCart();
                 Order o = new Order(new Date(), 0, "Pendiente");
                 c.addOrder(o);
-                persistOrder(o);
+                saveOrder(o);
             }
 
             case "/add" -> {
@@ -104,24 +105,22 @@ public class CartController extends HttpServlet {
             }
         }
 
-        
         response.sendRedirect(request.getContextPath() + "/cart");
     }
 
     public Order addProduct(HttpServletRequest request, User u) {
-        
+
         Order targetOrder = null;
-        
+
         try {
             Long prodId = Long.parseLong(request.getParameter("id"));
             String size = request.getParameter("size");
-            String orderIdxStr = request.getParameter("orderIdx"); 
+            String orderIdxStr = request.getParameter("orderIdx");
 
             Product p = em.find(Product.class, prodId);
 
             ProductItem item = new ProductItem(size, p.getName(), p.getDescription(), p.getPrice(), 1, p.getCategory(), p.getPathImage());
             item.setId(p.getId());
-
 
             //Si viene un índice de la ventana Modal, intentamos usar ese pedido
             if (orderIdxStr != null && !orderIdxStr.isEmpty()) {
@@ -130,14 +129,15 @@ public class CartController extends HttpServlet {
                     if (index >= 0 && index < u.getCart().getActiveOrders().size()) {
                         targetOrder = u.getCart().getActiveOrders().get(index);
                     }
-                } catch (NumberFormatException e) { }
+                } catch (NumberFormatException e) {
+                }
             }
 
             //Si no hay target (automático), usamos lógica por defecto
             if (targetOrder == null) {
                 if (u.getCart().getActiveOrders().isEmpty()) {
                     targetOrder = new Order(new Date(), 0, "Pendiente");
-                    
+
                     u.getCart().addOrder(targetOrder);
                 } else {
                     targetOrder = u.getCart().getLastOrder();
@@ -146,39 +146,40 @@ public class CartController extends HttpServlet {
 
             targetOrder.addItem(item);
             targetOrder.setTotalAmount(targetOrder.calculateTotal());
-            
-            
-            
+           
+                utx.begin();
+                User managedUser = em.merge(u); 
+                request.getSession().setAttribute("user", managedUser);
+                utx.commit();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
-        persistOrder(targetOrder);
+
+        saveOrder(targetOrder);
         return targetOrder;
-        
-        
+
     }
-    
-    public void persistOrder(Order o){
-        
-        boolean cond = false;
-        
-        try{
-            
+
+    public void saveOrder(Order o) {
+        try {
             utx.begin();
-            
-            em.persist(o);
-            
+
+            if (o.getId() == null) {
+
+                em.persist(o);
+            } else {
+
+                em.merge(o);
+            }
+
             utx.commit();
-            
+        } catch (Exception e) {
+            userLog.log(Level.SEVERE, "Error guardando el pedido", e);
+            try {
+                utx.rollback();
+            } catch (Exception ex) {
+            }
         }
-        catch(HeuristicMixedException | HeuristicRollbackException | NotSupportedException | RollbackException | SystemException | IllegalStateException | SecurityException e){
-            
-            userLog.log(Level.SEVERE, "Error inesperado guardando el pedido", e);
-            
-        }
-        
-        
     }
 }

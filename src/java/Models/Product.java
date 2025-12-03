@@ -41,9 +41,6 @@ public class Product implements Serializable {
     private String category;
     private String pathImage;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Order order;
-    
 
     public Product() {
     }
@@ -106,13 +103,7 @@ public class Product implements Serializable {
         this.pathImage = pathImage;
     }
 
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
-    }
+   
     
 
     public Long getId() {

@@ -47,6 +47,9 @@ public class User implements Serializable {
 
     public User(ShoppingCart cart, String name, String email, String password, String address, String role) {
         this.cart = cart;
+        if (cart != null) {
+            cart.setUser(this); 
+        }
         this.name = name;
         this.email = email;
         this.password = password;
@@ -61,8 +64,11 @@ public class User implements Serializable {
         return cart;
     }
 
-    public void setCart(ShoppingCart cart) {
-        this.cart = cart;
+    public void setCart(ShoppingCart cart) { 
+        this.cart = cart; 
+        if (cart != null && cart.getUser() != this) {
+            cart.setUser(this); 
+        }
     }
 
     public String getName() {
