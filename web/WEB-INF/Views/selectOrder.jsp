@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <c:set var="pageTitle" value="Elige tu Pedido" />
 <%@ include file="includes/header.jspf" %>
 
@@ -7,7 +8,7 @@
         <div class="col-md-8">
             <div class="card shadow border-primary">
                 <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">¿Dónde quieres añadir este producto?</h4>
+                    <h4 class="mb-0">Â¿DÃ³nde quieres aÃ±adir este producto?</h4>
                 </div>
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-4">
@@ -31,7 +32,7 @@
                                 
                                 <button type="submit" class="btn btn-link text-decoration-none text-dark w-100 text-start p-3 d-flex justify-content-between align-items-center">
                                     <span><strong>Pedido #${status.count}</strong> <small class="text-muted">(${order.orderDate})</small></span>
-                                    <span class="badge bg-primary rounded-pill">${order.totalAmount}?</span>
+                                    <span class="badge bg-primary rounded-pill">${order.totalAmount}â‚¬</span>
                                 </button>
                             </form>
                         </c:forEach>

@@ -37,7 +37,7 @@
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="price" class="form-label">Precio (?)</label>
+                            <label for="price" class="form-label">Precio (€)</label>
                             <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" required>
                         </div>
                         <div class="col-md-6 mb-3">

@@ -1,4 +1,4 @@
-
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
@@ -6,7 +6,7 @@
     <c:redirect url="/" />
 </c:if>
 
-<c:set var="pageTitle" value="Gestión - Admin" />
+<c:set var="pageTitle" value="GestiÃ³n - Admin" />
 <c:set var="users" value="${requestScope.ulist}" />
 <c:set var="products" value="${requestScope.plist}" />
 
@@ -15,7 +15,7 @@
 <div class="row mb-4">
     <div class="col-12">
         <h1 class="border-bottom pb-2">
-            <i class="bi bi-speedometer2"></i> Panel de Administración
+            <i class="bi bi-speedometer2"></i> Panel de AdministraciÃ³n
         </h1>
     </div>
 </div>
@@ -78,7 +78,7 @@
                             <tr>
                                 <th>Img</th>
                                 <th>Nombre</th>
-                                <th>Categoría</th>
+                                <th>CategorÃ­a</th>
                                 <th>Precio</th>
                                 <th>Stock</th>
                                 <th class="text-end">Acciones</th>
@@ -93,7 +93,7 @@
                                     </td>
                                     <td class="fw-bold">${p.name}</td>
                                     <td><span class="badge bg-secondary">${p.category}</span></td>
-                                    <td>${p.price}?</td>
+                                    <td>${p.price}â‚¬</td>
                                     <td>
                                         <c:choose>
                                             <c:when test="${p.stock < 5}"><span class="text-danger fw-bold">${p.stock} (Bajo)</span></c:when>
@@ -121,7 +121,7 @@
                                 <th>ID</th>
                                 <th>Nombre</th>
                                 <th>Email</th>
-                                <th>Dirección</th>
+                                <th>DirecciÃ³n</th>
                                 <th>Rol</th>
                                 <th class="text-end">Acciones</th>
                             </tr>

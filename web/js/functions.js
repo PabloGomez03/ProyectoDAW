@@ -1,7 +1,8 @@
 function searchProds(event) {
-    
+    //Prevenimos que salte el evento por defecto
     if(event) event.preventDefault();
     
+    //Tomamos el id
     const input = document.getElementById("searchInput");
     const texto = input.value;
     const contextPath = "/daw"; 
@@ -17,10 +18,7 @@ function searchProds(event) {
             .then(html => {
                 contenedor.innerHTML = html; 
             });
-    } else {
-        
-        window.location.href = contextPath + '/products/search?q=' + encodeURIComponent(texto);
-    }
+    } 
 }
 
 // Variables temporales para guardar qué producto estamos intentando añadir
@@ -28,14 +26,14 @@ let productoTempId = null;
 let tallaTempId = null;
 
 function gestionarCompra(idProducto, idSelectTalla) {
-    // 1. Capturamos los datos del producto
+    
     productoTempId = idProducto;
     
     // Obtenemos la talla (si es bolso, el input hidden tiene valor "Única")
     const select = document.getElementById(idSelectTalla);
     tallaTempId = select ? select.value : "Única";
 
-    // 2. DECISIÓN
+    
     if (numPedidosUsuario > 1) {
         // Si hay más de 1 pedido -> Abrimos el Modal
         const modal = new bootstrap.Modal(document.getElementById('modalSeleccionPedido'));
@@ -47,12 +45,12 @@ function gestionarCompra(idProducto, idSelectTalla) {
 }
 
 function enviarAlCarrito(indicePedido) {
-    // 1. Rellenamos el formulario oculto del footer
+    //Rellenamos el formulario oculto del footer
     document.getElementById("hiddenId").value = productoTempId;
     document.getElementById("hiddenSize").value = tallaTempId;
     document.getElementById("hiddenOrderIdx").value = indicePedido; // Puede ser un número o vacío
 
-    // 2. Lo enviamos
+    //Lo enviamos
     document.getElementById("formCarritoOculto").submit();
 }
 

@@ -1,4 +1,4 @@
-
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
@@ -16,10 +16,10 @@
             
             <i class="bi bi-check-circle-fill" style="font-size: 3rem; color: var(--bs-success);"></i>
             
-            <h2 class="mt-3">¡Registro completado!</h2>
+            <h2 class="mt-3">Â¡Registro completado!</h2>
             
             <p class="lead">
-                Tu cuenta ha sido creada con éxito.
+                Tu cuenta ha sido creada con Ã©xito.
             </p>
             
             <hr>

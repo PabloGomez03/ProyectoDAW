@@ -1,3 +1,4 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="pageTitle" value="Mi Carrito" />
 <%@ include file="includes/header.jspf" %>
@@ -31,13 +32,13 @@
                             <tr>
                                 <td>${item.name}</td>
                                 <td><span class="badge bg-secondary">${item.size}</span></td>
-                                <td>${item.price}?</td>
+                                <td>${item.price}€</td>
                             </tr>
                         </c:forEach>
                     </tbody>
                 </table>
                 <div class="d-flex justify-content-between align-items-center mt-3">
-                    <h4>Total: ${order.totalAmount}?</h4>
+                    <h4>Total: ${order.totalAmount}€</h4>
                     <button class="btn btn-success" onclick="alert('Simulando pago de la Orden #${status.count}...')">
                         Pagar y Finalizar
                     </button>

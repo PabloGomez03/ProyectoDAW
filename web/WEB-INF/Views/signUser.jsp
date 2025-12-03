@@ -1,4 +1,4 @@
-
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <c:set var="pageTitle" value="Registro" />
@@ -34,19 +34,19 @@
                 </div>
                 
                 <div class="mb-3">
-                    <label for="password" class="form-label">Contraseña</label>
+                    <label for="password" class="form-label">ContraseÃ±a</label>
                     <input type="password" class="form-control" id="password" name="password" required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="address" class="form-label">Dirección</label>
+                    <label for="address" class="form-label">DirecciÃ³n</label>
                     <input type="text" class="form-control" id="address" name="address" required>
                 </div>
                 
                 <button type="submit" class="btn btn-primary w-100">Crear Cuenta</button>
 
                 <div class="text-center mt-3">
-                    <p>¿Ya tienes cuenta? <a href="${pageContext.request.contextPath}/login">Inicia sesión</a></p>
+                    <p>Â¿Ya tienes cuenta? <a href="${pageContext.request.contextPath}/login">Inicia sesiÃ³n</a></p>
                 </div>
             </form>
         </div>

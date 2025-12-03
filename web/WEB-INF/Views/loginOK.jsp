@@ -1,8 +1,8 @@
-
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
-<c:set var="pageTitle" value="¡Bienvenido!" />
+<c:set var="pageTitle" value="Â¡Bienvenido!" />
 
 <%@ include file="includes/header.jspf" %>
 
@@ -14,7 +14,7 @@
             
             <i class="bi bi-check-circle-fill" style="font-size: 3rem; color: var(--bs-success);"></i>
             
-            <h2 class="mt-3">¡Inicio de sesión correcto!</h2>
+            <h2 class="mt-3">Â¡Inicio de sesiÃ³n correcto!</h2>
             
             <p class="lead">
                 Bienvenido de nuevo, <strong><c:out value="${sessionScope.usuarioLogueado.name}"/></strong>.

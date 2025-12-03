@@ -1,7 +1,7 @@
-
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<c:set var="pageTitle" value="Iniciar Sesión" />
+<c:set var="pageTitle" value="Iniciar SesiÃ³n" />
 
 <%@ include file="includes/header.jspf" %>
 
@@ -10,7 +10,7 @@
     <div class="col-md-6 offset-md-3">
 
         <div class="card shadow-sm p-4">
-            <h2 class="text-center mb-4">Iniciar Sesión</h2>
+            <h2 class="text-center mb-4">Iniciar SesiÃ³n</h2>
 
             <c:if test="${not empty requestScope.login}">
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -28,14 +28,14 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="password" class="form-label">Contraseña</label>
+                    <label for="password" class="form-label">ContraseÃ±a</label>
                     <input type="password" class="form-control" id="password" name="password" required>
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100">Entrar</button>
 
                 <div class="text-center mt-3">
-                    <p>¿No tienes cuenta? <a href="${pageContext.request.contextPath}/signup">Regístrate aquí</a></p>
+                    <p>Â¿No tienes cuenta? <a href="${pageContext.request.contextPath}/signup">RegÃ­strate aquÃ­</a></p>
                 </div>
             </form>
         </div>

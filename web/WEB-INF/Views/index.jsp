@@ -1,4 +1,4 @@
-
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <c:set var="pageTitle" value="DressStyle - Inicio" />
@@ -10,7 +10,7 @@
 <div class="row">
     <div class="col-12">
         <div class="p-5 mb-4 bg-light rounded-3 text-center">
-            <h1 class="display-4">¡Ofertas de Temporada!</h1>
+            <h1 class="display-4">Â¡Ofertas de Temporada!</h1>
             <p class="lead">Hasta 50% de descuento en camisetas y sudaderas.</p>
         </div>
     </div>
@@ -28,15 +28,20 @@
 
                 <div class="card-body">
                     <h5 class="card-title">${prod.name}</h5>
-                    <p class="card-text">${prod.price}</p>
+                    <p class="card-text">${prod.price}â‚¬</p>
                     <c:if test="${prod.category != 'Bolsos'}">
-                    <select class="form-select mb-2" name="size">
-                        <option value="S" id="s">S</option>
-                        <option value="M" id ="m" selected>M</option>
-                        <option value="L" id ="l">L</option>
-                    </select>
+                        <select class="form-select mb-2" name="size" id ="talla-${prod.id}">
+                            <option value="S" id="S">S</option>
+                            <option value="M" id ="M" selected>M</option>
+                            <option value="L" id ="L">L</option>
+                        </select>
+
+
                     </c:if>
-                    <a href="${pageContext.request.contextPath}/cart/add" class="btn btn-primary">Añadir al carrito</a>
+                    <button type="button" class="btn btn-primary w-100" 
+                            onclick="gestionarCompra(${prod.id}, 'talla-${prod.id}')">
+                        <i class="bi bi-cart-plus"></i> AÃ±adir al Carrito
+                    </button>
                 </div>
             </div>
         </div>

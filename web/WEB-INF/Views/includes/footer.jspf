@@ -4,7 +4,7 @@
     <p>&copy; 2025 DressStyle. Todos los derechos reservados.</p>
 </footer>
 
-<form id="formCarritoOculto" action="${pageContext.request.contextPath}/cart" method="POST" style="display:none;">
+<form id="formCarritoOculto" action="${pageContext.request.contextPath}/cart/add" method="POST" style="display:none;">
     <input type="hidden" name="action" value="add">
     <input type="hidden" name="id" id="hiddenId">
     <input type="hidden" name="size" id="hiddenSize">
