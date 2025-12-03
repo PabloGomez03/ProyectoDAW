@@ -23,7 +23,7 @@ import java.util.List;
  * @author apolo
  */
 @Entity
-@Table(name = "orders")
+@Table(name = "shop_orders")
 public class Order implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -102,6 +102,16 @@ public class Order implements Serializable {
         }
         return total;
     }
+
+    public ShoppingCart getCart() {
+        return cart;
+    }
+
+    public void setCart(ShoppingCart cart) {
+        this.cart = cart;
+    }
+    
+    
 
     
 

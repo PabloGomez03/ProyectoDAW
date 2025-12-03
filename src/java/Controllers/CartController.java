@@ -16,11 +16,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.transaction.HeuristicMixedException;
-import jakarta.transaction.HeuristicRollbackException;
-import jakarta.transaction.NotSupportedException;
-import jakarta.transaction.RollbackException;
-import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
 import java.util.Date;
 import java.util.logging.Level;
@@ -156,7 +151,7 @@ public class CartController extends HttpServlet {
             e.printStackTrace();
         }
 
-        saveOrder(targetOrder);
+        
         return targetOrder;
 
     }
@@ -168,6 +163,7 @@ public class CartController extends HttpServlet {
             if (o.getId() == null) {
 
                 em.persist(o);
+                
             } else {
 
                 em.merge(o);

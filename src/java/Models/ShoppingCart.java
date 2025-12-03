@@ -14,7 +14,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +51,7 @@ public class ShoppingCart implements Serializable {
     
     public void addOrder(Order o) {
         this.activeOrders.add(o);
+        o.setCart(this);
     }
     
     public Order getLastOrder() {
