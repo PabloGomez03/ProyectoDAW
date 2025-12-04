@@ -35,7 +35,16 @@
                 
                 <div class="mb-3">
                     <label for="password" class="form-label">Contraseña</label>
-                    <input type="password" class="form-control" id="password" name="password" required>
+                    <input type="password" class="form-control" id="password" name="password" oninput="validarPasswords()" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Confirmar Contraseña</label>
+                    <input type="password" class="form-control" id="password-confirm" name="password-confirm" oninput="validarPasswords()" required>
+                    
+                    <div id="msgError" class="form-text text-danger fw-bold d-none">
+                        <i class="bi bi-x-circle"></i> Las contraseñas no coinciden.
+                    </div>
+                    
                 </div>
 
                 <div class="mb-3">
@@ -43,7 +52,7 @@
                     <input type="text" class="form-control" id="address" name="address" required>
                 </div>
                 
-                <button type="submit" class="btn btn-primary w-100">Crear Cuenta</button>
+                <button type="btnSubmit" class="btn btn-primary w-100">Crear Cuenta</button>
 
                 <div class="text-center mt-3">
                     <p>¿Ya tienes cuenta? <a href="${pageContext.request.contextPath}/login">Inicia sesión</a></p>
@@ -53,5 +62,6 @@
         
     </div>
 </div>
-
+                
+<script src="${pageContext.request.contextPath}/js/functions.js"></script>
 <%@ include file="includes/footer.jspf" %>

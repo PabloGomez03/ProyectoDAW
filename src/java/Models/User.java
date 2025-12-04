@@ -11,7 +11,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -44,8 +43,10 @@ public class User implements Serializable {
     private String password;
     private String address;
     private String role;
+    @Column(name = "profile_image")
+    private String profileImage;
 
-    public User(ShoppingCart cart, String name, String email, String password, String address, String role) {
+    public User(ShoppingCart cart, String name, String email, String password, String address, String role,String profileImage) {
         this.cart = cart;
         if (cart != null) {
             cart.setUser(this); 
@@ -55,6 +56,7 @@ public class User implements Serializable {
         this.password = password;
         this.address = address;
         this.role = role;
+        this.profileImage = profileImage;
     }
 
     public User() {
@@ -109,6 +111,14 @@ public class User implements Serializable {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 
     

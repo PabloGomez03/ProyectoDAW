@@ -87,7 +87,7 @@ public class CartController extends HttpServlet {
 
         switch (action) {
             case "/newcart" -> {
-                // Crear nuevo pedido
+                
                 ShoppingCart c = user.getCart();
                 Order o = new Order(new Date(), 0, "Pendiente");
                 c.addOrder(o);
@@ -95,7 +95,7 @@ public class CartController extends HttpServlet {
             }
 
             case "/add" -> {
-                //Añadir producto al carrito
+                
                 addProduct(request, user);
             }
         }

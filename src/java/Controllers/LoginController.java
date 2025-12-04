@@ -15,6 +15,7 @@ import jakarta.persistence.TypedQuery;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,6 +36,7 @@ import org.mindrot.jbcrypt.BCrypt;
  *
  * @author apolo
  */
+@MultipartConfig
 @WebServlet(name = "LoginController", urlPatterns = {"/login", "/signup", "/signup/*", "/logout", ""})
 public class LoginController extends HttpServlet {
 
@@ -186,7 +188,7 @@ public class LoginController extends HttpServlet {
 
                 ShoppingCart cart = new ShoppingCart();
 
-                User user = new User(cart, name, email, hashedPassword, address, "user");
+                User user = new User(cart, name, email, hashedPassword, address, "user","");
 
                 if (saveUser(user)) {
 
@@ -223,8 +225,6 @@ public class LoginController extends HttpServlet {
           .getSingleResult();
 
         
-        
-        cond = false;
 
     } catch (jakarta.persistence.NoResultException e) {
         

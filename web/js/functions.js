@@ -54,4 +54,32 @@ function enviarAlCarrito(indicePedido) {
     document.getElementById("formCarritoOculto").submit();
 }
 
+function validarPasswords() {
+    
+        const pass1 = document.getElementById("password").value;
+        const pass2 = document.getElementById("password-confirm").value;
+        
+        const msgError = document.getElementById("msgError");
+        const btn = document.getElementById("btnSubmit");
+
+        
+        if (pass2.length === 0) {
+            msgError.classList.add("d-none");
+            btn.disabled = false; 
+            return;
+        }
+
+        if (pass1 === pass2) {
+            // COINCIDEN
+            msgError.classList.add("d-none");   // Ocultar error
+            btn.disabled = false;               // Activar botón
+        } else {
+            // NO COINCIDEN
+            msgError.classList.remove("d-none");// Mostrar error
+            btn.disabled = true;                // Desactivar botón para que no pueda enviar
+        }
+    }
+
+   
+
 

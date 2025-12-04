@@ -13,26 +13,34 @@ import jakarta.persistence.TypedQuery;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
 import jakarta.transaction.HeuristicMixedException;
 import jakarta.transaction.HeuristicRollbackException;
 import jakarta.transaction.NotSupportedException;
 import jakarta.transaction.RollbackException;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
+import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
  * @author apolo
  */
-@WebServlet(name = "UsersController", urlPatterns = {"/profile/*", "/modify", "/admin","/remove/*"})
+@MultipartConfig
+@WebServlet(name = "UsersController", urlPatterns = {"/profile/*", "/modify", "/admin", "/remove/*"})
 public class UsersController extends HttpServlet {
 
     @PersistenceContext(unitName = "DAWFinalPU")
@@ -59,7 +67,7 @@ public class UsersController extends HttpServlet {
 
             action = "/admin";
 
-        }else if(request.getServletPath().contains("/remove")){
+        } else if (request.getServletPath().contains("/remove")) {
 
             action = "/remove";
 
@@ -92,14 +100,13 @@ public class UsersController extends HttpServlet {
                 view = "error";
 
             }
-            case "/remove" ->{
-                
+            case "/remove" -> {
+
                 Long id = Long.valueOf(request.getPathInfo().substring(1));
                 deleteUser(id);
                 loadData(request);
                 view = "administration";
-                
-                
+
             }
 
             default -> {
@@ -128,11 +135,10 @@ public class UsersController extends HttpServlet {
 
             action = "/modify";
 
-        } 
-        else{
-            
+        } else {
+
             action = "/error";
-            
+
         }
 
         switch (action) {
@@ -149,8 +155,6 @@ public class UsersController extends HttpServlet {
                 view = "modifyOK";
 
             }
-            
-            
 
         }
 
@@ -164,7 +168,7 @@ public class UsersController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    public void modifyUser(HttpServletRequest request, HttpSession session) {
+    public void modifyUser(HttpServletRequest request, HttpSession session) throws IOException, ServletException {
 
         try {
             utx.begin();
@@ -173,7 +177,33 @@ public class UsersController extends HttpServlet {
             u.setName(request.getParameter("name"));
             u.setEmail(request.getParameter("email"));
             u.setAddress(request.getParameter("address"));
-            u.setPassword(request.getParameter("password"));
+            String hashedPassword = BCrypt.hashpw(request.getParameter("password"), BCrypt.gensalt(12));
+            u.setPassword(hashedPassword);
+
+            Part img = request.getPart("image");
+
+            if (img != null && img.getSize() > 0) {
+
+                String nombre = img.getSubmittedFileName();
+                String extension = "";
+                int i = nombre.lastIndexOf('.');
+                if (i > 0) {
+                    extension = nombre.substring(i);
+                }
+
+                String filename = "user_" + u.getId() + extension;
+
+                String upload = request.getServletContext().getRealPath("") + "/img/users";
+
+                File uploadDir = new File(upload);
+
+                File file = new File(uploadDir, filename);
+                try (InputStream input = img.getInputStream()) {
+                    Files.copy(input, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                }
+
+                u.setProfileImage(filename);
+            }
 
             em.merge(u);
 
@@ -207,20 +237,18 @@ public class UsersController extends HttpServlet {
         }
 
     }
-    
-    public void deleteUser(Long id){
-        
+
+    public void deleteUser(Long id) {
+
         try {
             utx.begin();
 
             em.remove(em.find(User.class, id));
-            
 
             utx.commit();
         } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
+
     }
 }
