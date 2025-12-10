@@ -193,9 +193,15 @@ public class UsersController extends HttpServlet {
 
                 String filename = "user_" + u.getId() + extension;
 
-                String upload = request.getServletContext().getRealPath("") + "/img/users";
+                String upload = request.getServletContext().getRealPath("")+ File.separator + "/img/users";
 
                 File uploadDir = new File(upload);
+                
+                if(!uploadDir.exists()){
+                    
+                    uploadDir.mkdir();
+                    
+                }
 
                 File file = new File(uploadDir, filename);
                 try (InputStream input = img.getInputStream()) {

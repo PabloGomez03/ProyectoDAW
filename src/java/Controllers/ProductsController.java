@@ -13,17 +13,23 @@ import jakarta.persistence.TypedQuery;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
 import jakarta.transaction.HeuristicMixedException;
 import jakarta.transaction.HeuristicRollbackException;
 import jakarta.transaction.NotSupportedException;
 import jakarta.transaction.RollbackException;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.UserTransaction;
+import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -32,6 +38,7 @@ import java.util.logging.Level;
  *
  * @author apolo
  */
+@MultipartConfig
 @WebServlet(name = "ProductsController", urlPatterns = {"/products/*", "/products/delete/*"})
 public class ProductsController extends HttpServlet {
 
@@ -112,16 +119,40 @@ public class ProductsController extends HttpServlet {
 
             case "/create" -> {
 
-                String name, price, stock, pathImage, description, category;
+                String name, price, stock, pathImage, description, category,filename = "";
 
                 name = request.getParameter("name");
                 price = request.getParameter("price");
                 stock = request.getParameter("stock");
-                pathImage = request.getParameter("pathImage");
                 description = request.getParameter("description");
                 category = request.getParameter("category");
+                Part img = request.getPart("image");
+                
+                if (img != null && img.getSize() > 0) {
 
-                Product p = new Product(name, description, Float.valueOf(price), Integer.valueOf(stock), category, "img/" + pathImage);
+                String nombre = img.getSubmittedFileName();
+                String extension = "";
+                int i = nombre.lastIndexOf('.');
+                if (i > 0) {
+                    extension = nombre.substring(i);
+                }
+
+                filename = "product_" + name + extension;
+
+                String upload = request.getServletContext().getRealPath("") + File.separator + "/img";
+
+                File uploadDir = new File(upload);
+
+                File file = new File(uploadDir, filename);
+                try (InputStream input = img.getInputStream()) {
+                    Files.copy(input, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    
+                }
+
+                
+            }
+
+                Product p = new Product(name, description, Float.valueOf(price), Integer.valueOf(stock), category, "img/" + filename);
                 saveProduct(p);
                 loadData(request);
                 view = "administration";

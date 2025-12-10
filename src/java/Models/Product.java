@@ -34,8 +34,6 @@ public class Product implements Serializable {
     private String description;
     @NotNull
     private float price;
-    /*@NotNull
-    private String size;*/
     @NotNull
     private int stock;
     private String category;

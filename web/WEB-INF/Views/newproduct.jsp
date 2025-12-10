@@ -23,7 +23,25 @@
             
             <div class="card-body p-4">
                 
-                <form action="${pageContext.request.contextPath}/products/create" method="POST">
+                <form action="${pageContext.request.contextPath}/products/create" method="POST" enctype="multipart/form-data">
+                    
+                    <div class="position-relative d-inline-block">               
+                                        <img id="imgPreview" src="#" 
+                                             class="d-none rounded-circle mb-3 shadow-sm" 
+                                             style="width: 150px; height: 150px; object-fit: cover; border: 4px solid #fff;">
+
+                                        <div id="defaultIcon" class="rounded-circle bg-secondary d-inline-flex align-items-center justify-content-center text-white mb-3" 
+                                             style="width: 150px; height: 150px;">
+                                            <i class="bi bi-person-fill" style="font-size: 5rem;"></i>
+                                        </div>
+                    </div>
+                    <div class="mt-2">
+                                <label for="fileInput" class="btn btn-outline-primary">
+                                    <i class="bi bi-camera-fill"></i> Cambiar Foto
+                                </label>
+
+                        <input type="file" id="fileInput" name="image" class="d-none" accept=".jpg, .png">
+                            </div>
                     
                     <div class="mb-3">
                         <label for="name" class="form-label">Nombre del Producto</label>
@@ -50,16 +68,7 @@
                         <label for="category" class="form-label">Categoría</label>
                         <input type="text" class="form-control" id="category" name="category" placeholder="Ej: Camisetas, Pantalones..." required>
                     </div>
-
-                    <div class="mb-3">
-                        <label for="pathImage" class="form-label">Nombre de la Imagen</label>
-                        <div class="input-group">
-                            <span class="input-group-text">img/</span>
-                            <input type="text" class="form-control" id="pathImage" name="pathImage" placeholder="ejemplo.jpg" required>
-                        </div>
-                        <div class="form-text text-muted">
-                            <i class="bi bi-info-circle"></i> Recuerda copiar el archivo de imagen a la carpeta <strong>web/img/</strong> manualmente.
-                        </div>
+                        
                     </div>
 
                     <hr>
