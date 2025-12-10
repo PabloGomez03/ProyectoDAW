@@ -193,7 +193,7 @@ public class UsersController extends HttpServlet {
 
                 String filename = "user_" + u.getId() + extension;
 
-                String upload = request.getServletContext().getRealPath("")+ File.separator + "/img/users";
+                String upload ="C:\\Users\\apolo\\OneDrive\\Escritorio\\DAW\\DAWFinal\\web\\img\\users";
 
                 File uploadDir = new File(upload);
                 

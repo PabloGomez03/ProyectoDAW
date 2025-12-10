@@ -137,9 +137,9 @@ public class ProductsController extends HttpServlet {
                     extension = nombre.substring(i);
                 }
 
-                filename = "product_" + name + extension;
+                filename = "product_" + name.trim() + extension;
 
-                String upload = request.getServletContext().getRealPath("") + File.separator + "/img";
+                String upload = "C:\\Users\\apolo\\OneDrive\\Escritorio\\DAW\\DAWFinal\\web\\img";
 
                 File uploadDir = new File(upload);
 
